@@ -1,44 +1,63 @@
-package com.buylist.solomakha.buylistapp;
+package com.buylist.solomakha.buylistapp.ui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
+import com.buylist.solomakha.buylistapp.R;
 import com.buylist.solomakha.buylistapp.storage.database.dal.DBDataSource;
 import com.buylist.solomakha.buylistapp.storage.database.dal.DataSource;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
+import com.buylist.solomakha.buylistapp.storage.database.entities.ProductsList;
 
-public class MainActivity extends AppCompatActivity
-{
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
     Boolean alreadyCreated = false;
+    ListView listView;
+    List<ProductsList> productsListList = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button b =(Button) findViewById(R.id.but_fill);
+
+        listView = (ListView) findViewById(R.id.productList);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ProductsList productsList = productsListList.get(position);
+                startActivity(new Intent(getApplicationContext(), ProductsActivity.class).putExtra("Id", productsList.getId()));
+            }
+        });
+
+        Button b = (Button) findViewById(R.id.but_fill);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!alreadyCreated)  fillDBDefaultValues();
-
+                if (!alreadyCreated) {
+                    fillDBDefaultValues();
+                }
             }
         });
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
+        DataSource dataSource = new DBDataSource(this);
 
-
+        productsListList = dataSource.getAllProductsList();
+        listView.setAdapter(new ArrayAdapter<ProductsList>(this, R.layout.list_item, R.id.listItem, productsListList));
     }
 
-
-    protected void  fillDBDefaultValues()
-    {
+    protected void fillDBDefaultValues() {
 
         DataSource dataSource = new DBDataSource(this);
         long categoryId = dataSource.createCategory("Others");
@@ -52,9 +71,8 @@ public class MainActivity extends AppCompatActivity
         long unitId_pcs = dataSource.createUnit("pcs");
 
         long listId_Products = dataSource.createList("PostProducts");
-        long listId1 =  dataSource.createList("PostClothes");
+        long listId1 = dataSource.createList("PostClothes");
         long listId2 = dataSource.createList("PostAppliances");
-
 
 
 //ПРОДУКТ:
@@ -67,7 +85,6 @@ public class MainActivity extends AppCompatActivity
         product.setQuantity(2);
         product.setUnit("kg");
         long productId = dataSource.createProduct(product);
-
 
         // Kettle - не внесен  в список
         Product product1 = new Product();
@@ -101,7 +118,7 @@ public class MainActivity extends AppCompatActivity
         long productId3 = dataSource.createProduct(product3);
         dataSource.createListsProductsItem(listId_Products, productId3);//связка  со списком
 
-        //System.out.println(productId);
-        alreadyCreated =true;
+        alreadyCreated = true;
     }
 }
+

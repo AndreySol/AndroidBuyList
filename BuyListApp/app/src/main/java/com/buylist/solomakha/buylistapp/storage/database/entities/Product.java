@@ -3,8 +3,7 @@ package com.buylist.solomakha.buylistapp.storage.database.entities;
 /**
  * Created by asolomakha on 1/3/2016.
  */
-public class Product extends BaseEntity
-{
+public class Product extends BaseEntity {
 
     private boolean priority;
     private float quantity;
@@ -12,43 +11,35 @@ public class Product extends BaseEntity
     private String unit;
     private String category;
 
-    public boolean isPriority()
-    {
+    public boolean isPriority() {
         return priority;
     }
 
-    public void setPriority(boolean priority)
-    {
+    public void setPriority(boolean priority) {
         this.priority = priority;
     }
 
-    public float getQuantity()
-    {
+    public float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(float quantity)
-    {
+    public void setQuantity(float quantity) {
         this.quantity = quantity;
     }
 
-    public String getImage()
-    {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(String image)
-    {
+    public void setImage(String image) {
         this.image = image;
     }
 
-    public String getCategory()
-    {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(String groupId)
-    {
+    public void setCategory(String groupId) {
         this.category = groupId;
     }
 
