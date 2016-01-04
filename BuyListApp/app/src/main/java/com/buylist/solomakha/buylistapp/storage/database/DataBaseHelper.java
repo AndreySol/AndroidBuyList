@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.buylist.solomakha.buylistapp.storage.database.tables.CategoriesTable;
+import com.buylist.solomakha.buylistapp.storage.database.tables.Categories_ProductsTable;
 import com.buylist.solomakha.buylistapp.storage.database.tables.ProductsTable;
 import com.buylist.solomakha.buylistapp.storage.database.tables.ListsTable;
 import com.buylist.solomakha.buylistapp.storage.database.tables.Lists_ProductsTable;
@@ -31,6 +32,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
         CategoriesTable.create(db);
         ListsTable.create(db);
         Lists_ProductsTable.create(db);
+        Categories_ProductsTable.create(db);
     }
 
     @Override

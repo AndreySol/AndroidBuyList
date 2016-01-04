@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 public class Categories_ProductsTable {
     public final static String TABLE_NAME = "CategoriesProducts";
     public final static String COLUMN_ID = "Id";
-    public final static String COLUMN_CATEGORY_ID = "GroupId";
+    public final static String COLUMN_CATEGORY_ID = "CategoryId";
     public final static String COLUMN_PRODUCT_ID = "ProductId";
     private final static String CREATE_TABLE = " create table " +
             TABLE_NAME + "( " +
