@@ -5,18 +5,17 @@ import android.database.sqlite.SQLiteDatabase;
 /**
  * Created by asolomakha on 1/3/2016.
  */
-public class ProductsList_ProductTable {
+public class CategoriesTable {
 
-    public final static String TABLE_NAME = "ProductsList_Product";
+    public final static String TABLE_NAME = "Categories";
     public final static String COLUMN_ID = "Id";
-    public final static String COLUMN_PRODUCTS_LIST_ID = "ProductsLIstId";
-    public final static String COLUMN_PRODUCT_ID = "ProductId";
+    public final static String COLUMN_NAME = "Name";
+
 
     private final static String CREATE_TABLE = " create table " +
             TABLE_NAME + "( " +
             COLUMN_ID + " integer primary key autoincrement, " +
-            COLUMN_PRODUCTS_LIST_ID + " integer, " +
-            COLUMN_PRODUCT_ID + " integer " +
+            COLUMN_NAME + " text not null " +
             ");";
 
     public static void create(SQLiteDatabase db) {

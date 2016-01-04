@@ -7,7 +7,7 @@ import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
  */
 public interface DataSource
 {
-    long createGroup(String groupName);
+    long createCategory(String categoryName);
 
     long createProduct(Product product);
 }

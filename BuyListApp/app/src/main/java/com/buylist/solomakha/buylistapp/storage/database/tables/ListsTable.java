@@ -5,11 +5,12 @@ import android.database.sqlite.SQLiteDatabase;
 /**
  * Created by asolomakha on 1/3/2016.
  */
-public class UnitTable {
+public class ListsTable {
 
-    public final static String TABLE_NAME = "Unit";
+    public final static String TABLE_NAME = "Lists";
     public final static String COLUMN_ID = "Id";
     public final static String COLUMN_NAME = "Name";
+
 
     private final static String CREATE_TABLE = " create table " +
             TABLE_NAME + "( " +

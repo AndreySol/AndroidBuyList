@@ -8,14 +8,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
-import com.buylist.solomakha.buylistapp.storage.database.DataBaseHalper;
+import com.buylist.solomakha.buylistapp.storage.database.DataBaseHelper;
 
 /**
  * Created by asolomakha on 1/3/2016.
  */
 public class BuyListProvider extends ContentProvider {
 
-    private DataBaseHalper database;
+    private DataBaseHelper database;
 
     private static final int ITEMS = 10;
     private static final int ITEM_ID = 20;
@@ -37,7 +37,7 @@ public class BuyListProvider extends ContentProvider {
     @Override
     public boolean onCreate()
     {
-        database = new DataBaseHalper(getContext());
+        database = new DataBaseHelper(getContext());
         return false;
     }
 

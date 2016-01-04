@@ -5,29 +5,23 @@ import android.database.sqlite.SQLiteDatabase;
 /**
  * Created by asolomakha on 1/3/2016.
  */
-public class ProductTable
-{
-    public final static String TABLE_NAME = "Product";
+public class Lists_ProductsTable {
+
+    public final static String TABLE_NAME = "Lists_Products";
     public final static String COLUMN_ID = "Id";
-    public final static String COLUMN_GROUP_ID = "GroupId";
-    public final static String COLUMN_NAME = "Name";
-    public final static String COLUMN_PRIORITY = "Priority";
-    public final static String COLUMN_QUANTITY = "Quantity";
-    public final static String COLUMN_IMAGE = "Image";
+    public final static String COLUMN_LIST_ID = "ListId";
+    public final static String COLUMN_PRODUCT_ID = "ProductId";
 
     private final static String CREATE_TABLE = " create table " +
             TABLE_NAME + "( " +
             COLUMN_ID + " integer primary key autoincrement, " +
-            COLUMN_GROUP_ID + " integer, " +
-            COLUMN_NAME + " text not null, " +
-            COLUMN_PRIORITY + " integer, " +
-            COLUMN_QUANTITY + " integer, " +
-            COLUMN_IMAGE + " text " +
+            COLUMN_LIST_ID + " integer, " +
+            COLUMN_PRODUCT_ID + " integer " +
             ");";
 
     public static void create(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE);
-}
+    }
 
     public static void upgrade(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
