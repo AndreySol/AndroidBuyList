@@ -11,7 +11,7 @@ import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
 
 public class MainActivity extends AppCompatActivity
 {
-    Boolean boo = false;
+    Boolean alreadyCreated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!boo)  fillDBDefaultValues();
+                if(!alreadyCreated)  fillDBDefaultValues();
 
             }
         });
@@ -62,47 +62,46 @@ public class MainActivity extends AppCompatActivity
         //Apple - не внесен  в список
         Product product = new Product();
         product.setName("Apple");
-        product.setCategoryId(categoryId_Fr);
+        product.setCategory("Fruit");
         product.setPriority(false);
         product.setQuantity(2);
-        product.setUnitId(unitId_kg);
+        product.setUnit("kg");
         long productId = dataSource.createProduct(product);
-        dataSource.createProductsCategoriesItem(categoryId_Fr,productId);//связка  с категорией
+
 
         // Kettle - не внесен  в список
         Product product1 = new Product();
         product1.setName("Kettle");
-        product1.setCategoryId(categoryId_Appliances);
+        product1.setCategory("Appliances");
         product1.setPriority(false);
         product1.setQuantity(1);
-        product1.setUnitId(unitId_pcs);
+        product1.setUnit("pcs");
         long productId1 = dataSource.createProduct(product1);
-        dataSource.createProductsCategoriesItem(categoryId_Appliances, productId1);//связка  с категорией
+
 
         // Banana -  внесен  в список
         Product product2 = new Product();
         product2.setName("Banana");
-        product2.setCategoryId(categoryId_Fr);
+        product2.setCategory("Fruit");
         product2.setPriority(false);
         product2.setQuantity(1.5f);
-        product2.setUnitId(unitId_kg);
+        product2.setUnit("kg");
         long productId2 = dataSource.createProduct(product2);
-        dataSource.createProductsCategoriesItem(categoryId_Fr, productId2);//связка  с категорией
+
         dataSource.createListsProductsItem(listId_Products, productId2);//связка  со списком
 
 
         // Orange -  внесен  в список
         Product product3 = new Product();
         product3.setName("Orange");
-        product3.setCategoryId(categoryId_Fr);
+        product3.setCategory("Fruit");
         product3.setPriority(false);
         product3.setQuantity(2.5f);
-        product3.setUnitId(unitId_kg);
+        product3.setUnit("kg");
         long productId3 = dataSource.createProduct(product3);
-        dataSource.createProductsCategoriesItem(categoryId_Fr, productId3);//связка  с категорией
         dataSource.createListsProductsItem(listId_Products, productId3);//связка  со списком
 
         //System.out.println(productId);
-        boo =true;
+        alreadyCreated =true;
     }
 }

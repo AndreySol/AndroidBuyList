@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import com.buylist.solomakha.buylistapp.storage.database.DataBaseHelper;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
 import com.buylist.solomakha.buylistapp.storage.database.tables.CategoriesTable;
-import com.buylist.solomakha.buylistapp.storage.database.tables.Categories_ProductsTable;
 import com.buylist.solomakha.buylistapp.storage.database.tables.ListsTable;
 import com.buylist.solomakha.buylistapp.storage.database.tables.Lists_ProductsTable;
 import com.buylist.solomakha.buylistapp.storage.database.tables.ProductsTable;
@@ -27,18 +26,13 @@ public class DBDataSource implements DataSource {
     @Override
     public long createCategory(String categoryName) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long id=-1;
-
-
-
+        long id = -1;
         try {
             ContentValues values = new ContentValues();
             values.put(CategoriesTable.COLUMN_NAME, categoryName);
 
-             id = db.insert(CategoriesTable.TABLE_NAME, null, values);
-        }
-
-        finally {
+            id = db.insert(CategoriesTable.TABLE_NAME, null, values);
+        } finally {
             dbHelper.close();
         }
         return id;
@@ -50,13 +44,11 @@ public class DBDataSource implements DataSource {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         try {
-            ContentValues values= new ContentValues();
-            values.put(UnitsTable.COLUMN_NAME,unit);
+            ContentValues values = new ContentValues();
+            values.put(UnitsTable.COLUMN_NAME, unit);
 
-            createdUnitId= db.insert(UnitsTable.TABLE_NAME,null,values);
-        }
-
-        finally {
+            createdUnitId = db.insert(UnitsTable.TABLE_NAME, null, values);
+        } finally {
             dbHelper.close();
         }
         return createdUnitId;
@@ -72,7 +64,8 @@ public class DBDataSource implements DataSource {
             productValues.put(ProductsTable.COLUMN_NAME, product.getName());
             productValues.put(ProductsTable.COLUMN_PRIORITY, product.isPriority());
             productValues.put(ProductsTable.COLUMN_QUANTITY, product.getQuantity());
-            productValues.put(ProductsTable.COLUMN_UNIT_ID, product.getCategoryId());
+            productValues.put(ProductsTable.COLUMN_UNIT_ID, product.getUnitId());
+            productValues.put(ProductsTable.COLUMN_CATEGORY_ID, product.getCategoryId());
             createdProductionId = db.insert(ProductsTable.TABLE_NAME, null, productValues);
         } finally {
             dbHelper.close();
@@ -96,21 +89,6 @@ public class DBDataSource implements DataSource {
         return createdListId;
     }
 
-    @Override
-    public long createProductsCategoriesItem(long categoryId, long productId) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long createdId = -1;
-        try {
-            ContentValues listValues = new ContentValues();
-            listValues.put(Categories_ProductsTable.COLUMN_CATEGORY_ID, categoryId);
-            listValues.put(Categories_ProductsTable.COLUMN_PRODUCT_ID, productId);
-
-            createdId = db.insert(Categories_ProductsTable.TABLE_NAME, null, listValues);
-        } finally {
-            dbHelper.close();
-        }
-        return createdId;
-    }
 
     @Override
     public long createListsProductsItem(long listId, long productId) {

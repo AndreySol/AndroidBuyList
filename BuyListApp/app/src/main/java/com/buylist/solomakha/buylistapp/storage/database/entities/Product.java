@@ -9,8 +9,8 @@ public class Product extends BaseEntity
     private boolean priority;
     private float quantity;
     private String image;
-    private long unitId;
-    private long categoryId;
+    private String unit;
+    private String category;
 
     public boolean isPriority()
     {
@@ -42,21 +42,21 @@ public class Product extends BaseEntity
         this.image = image;
     }
 
-    public long getCategoryId()
+    public String getCategory()
     {
-        return categoryId;
+        return category;
     }
 
-    public void setCategoryId(long groupId)
+    public void setCategory(String groupId)
     {
-        this.categoryId = groupId;
+        this.category = groupId;
     }
 
-    public long getUnitId() {
-        return unitId;
+    public String getUnit() {
+        return unit;
     }
 
-    public void setUnitId(long unitId) {
-        this.unitId = unitId;
+    public void setUnit(String unitId) {
+        this.unit = unitId;
     }
 }

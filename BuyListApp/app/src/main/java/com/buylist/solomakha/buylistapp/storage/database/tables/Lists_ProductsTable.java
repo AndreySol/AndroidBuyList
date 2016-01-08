@@ -15,8 +15,12 @@ public class Lists_ProductsTable {
     private final static String CREATE_TABLE = " create table " +
             TABLE_NAME + "( " +
             COLUMN_ID + " integer primary key autoincrement, " +
-            COLUMN_LIST_ID + " integer, " +
-            COLUMN_PRODUCT_ID + " integer " +
+            COLUMN_LIST_ID + " integer REFERENCES "+ ListsTable.TABLE_NAME + " ( " + ListsTable.COLUMN_ID + " ) " +
+            "  ON DELETE CASCADE " +
+            "  ON UPDATE CASCADE ," +
+            COLUMN_PRODUCT_ID + " integer  REFERENCES "+ ProductsTable.TABLE_NAME + " ( " + ProductsTable.COLUMN_ID + " ) " +
+            "  ON DELETE CASCADE " +
+            "  ON UPDATE CASCADE " +
             ");";
 
     public static void create(SQLiteDatabase db) {

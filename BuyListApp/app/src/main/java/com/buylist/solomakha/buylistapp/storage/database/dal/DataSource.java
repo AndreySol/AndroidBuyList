@@ -12,6 +12,6 @@ public interface DataSource
     long createProduct(Product product);
     long createList(String product);
 
-    long createProductsCategoriesItem(long categoryId,long productId);
+
     long createListsProductsItem(long listId,long productId);
 }
