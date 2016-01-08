@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import com.buylist.solomakha.buylistapp.storage.database.DataBaseHelper;
+import com.buylist.solomakha.buylistapp.storage.database.entities.Category;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
 import com.buylist.solomakha.buylistapp.storage.database.entities.ProductsList;
 import com.buylist.solomakha.buylistapp.storage.database.tables.CategoriesTable;
@@ -163,6 +164,7 @@ public class DBDataSource implements DataSource {
                         product.setPriority(priority > 0 ? true : false);
                         product.setQuantity(cursor.getInt(cursor.getColumnIndex(ProductsTable.COLUMN_QUANTITY)));
                         product.setImage(cursor.getString(cursor.getColumnIndex(ProductsTable.COLUMN_IMAGE)));
+                        product.setCategory(cursor.getString(cursor.getColumnIndex(ProductsTable.COLUMN_CATEGORY_ID)));
                         productLists.add(product);
                     } while (cursor.moveToNext());
                 }

@@ -50,14 +50,24 @@ public class ProductsActivity extends AppCompatActivity
     }
 
     private void prepareListData() {
-        listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<Product>>();
 
         List<Product> productList = dataSource.getAllProductsFromList(getIntent().getIntExtra("Id", -1));
 
-        listDataHeader.add("Others");
-        listDataChild.put(listDataHeader.get(0), productList);
+        for (Product product : productList) {
+            if (listDataChild.containsKey(product.getCategory()))
+            {
+                listDataChild.get(product.getCategory()).add(product);
+            }
+            else
+            {
+                List<Product> products = new ArrayList<>();
+                products.add(product);
+                listDataChild.put(product.getCategory(), products);
+            }
+        }
 
+        listDataHeader = new ArrayList<String>(listDataChild.keySet());
         listAdapter.setValues(listDataHeader, listDataChild);
     }
 }

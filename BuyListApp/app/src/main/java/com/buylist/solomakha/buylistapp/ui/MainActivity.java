@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     Boolean alreadyCreated = false;
     ListView listView;
     List<ProductsList> productsListList = new ArrayList<>();
+    ArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
         DataSource dataSource = new DBDataSource(this);
 
         productsListList = dataSource.getAllProductsList();
-        listView.setAdapter(new ArrayAdapter<ProductsList>(this, R.layout.list_item, R.id.listItem, productsListList));
+        adapter = new ArrayAdapter<ProductsList>(this, R.layout.list_item, R.id.listItem, productsListList);
+        listView.setAdapter(adapter);
     }
 
     protected void fillDBDefaultValues() {
@@ -85,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         product.setQuantity(2);
         product.setUnit("kg");
         long productId = dataSource.createProduct(product);
+        dataSource.createListsProductsItem(listId1, productId);//связка  со списком
 
         // Kettle - не внесен  в список
         Product product1 = new Product();
@@ -94,7 +97,8 @@ public class MainActivity extends AppCompatActivity {
         product1.setQuantity(1);
         product1.setUnit("pcs");
         long productId1 = dataSource.createProduct(product1);
-
+        dataSource.createListsProductsItem(listId_Products, productId1);//связка  со списком
+        dataSource.createListsProductsItem(listId1, productId1);//связка  со списком
 
         // Banana -  внесен  в список
         Product product2 = new Product();
@@ -104,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
         product2.setQuantity(1.5f);
         product2.setUnit("kg");
         long productId2 = dataSource.createProduct(product2);
-
         dataSource.createListsProductsItem(listId_Products, productId2);//связка  со списком
 
 
@@ -119,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
         dataSource.createListsProductsItem(listId_Products, productId3);//связка  со списком
 
         alreadyCreated = true;
+
+        adapter.clear();
+        adapter.addAll(dataSource.getAllProductsList());
     }
 }
 
