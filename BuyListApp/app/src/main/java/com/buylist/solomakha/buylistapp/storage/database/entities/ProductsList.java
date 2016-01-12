@@ -5,6 +5,13 @@ package com.buylist.solomakha.buylistapp.storage.database.entities;
  */
 public class ProductsList extends BaseEntity
 {
+    public ProductsList(){}
+
+    public ProductsList(long id, String name) {
+        setId(id);
+        setName(name);
+    }
+
     @Override
     public String toString()
     {

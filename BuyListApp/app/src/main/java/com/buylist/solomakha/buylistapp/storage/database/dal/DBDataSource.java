@@ -2,7 +2,6 @@ package com.buylist.solomakha.buylistapp.storage.database.dal;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
@@ -11,6 +10,7 @@ import com.buylist.solomakha.buylistapp.storage.database.DataBaseHelper;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Category;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
 import com.buylist.solomakha.buylistapp.storage.database.entities.ProductsList;
+import com.buylist.solomakha.buylistapp.storage.database.entities.Unit;
 import com.buylist.solomakha.buylistapp.storage.database.tables.CategoriesTable;
 import com.buylist.solomakha.buylistapp.storage.database.tables.ListsTable;
 import com.buylist.solomakha.buylistapp.storage.database.tables.Lists_ProductsTable;
@@ -25,97 +25,199 @@ import java.util.List;
  */
 public class DBDataSource implements DataSource {
 
-    DataBaseHelper dbHelper;
 
-    public DBDataSource(Context context) {
+    private static DBDataSource dbDataSource;
+
+    public static DBDataSource getIns(Context context) {
+        if (dbDataSource == null) {
+            return new DBDataSource(context);
+        } else {
+            return dbDataSource;
+        }
+    }
+
+    private DataBaseHelper dbHelper;
+
+    private DBDataSource(Context context) {
         dbHelper = new DataBaseHelper(context);
     }
 
     @Override
-    public long createCategory(String categoryName) {
+    public Category createCategory(String name) {
+        Category category = null;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long id = -1;
-
         try {
             ContentValues values = new ContentValues();
-            values.put(CategoriesTable.COLUMN_NAME, categoryName);
+            values.put(CategoriesTable.COLUMN_NAME, name);
 
-            id = db.insert(CategoriesTable.TABLE_NAME, null, values);
+            long id = db.insert(CategoriesTable.TABLE_NAME, null, values);
+            if (id > -1) {
+                category = new Category(id, name);
+            }
         } finally {
             dbHelper.close();
         }
-        return id;
+        return category;
     }
 
     @Override
-    public long createUnit(String unit) {
-        long createdUnitId = -1;
+    public List<Category> getCategories() {
+        List<Category> categoryListList = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            cursor = db.query(CategoriesTable.TABLE_NAME, null, null, null, null, null, null);
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    do {
+                        Category category = new Category();
+                        category.setId(cursor.getInt(cursor.getColumnIndex(ListsTable.COLUMN_ID)));
+                        category.setName(cursor.getString(cursor.getColumnIndex(ListsTable.COLUMN_NAME)));
+                        categoryListList.add(category);
+                    } while (cursor.moveToNext());
+                }
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            dbHelper.close();
+        }
+        return categoryListList;
+    }
+
+    @Override
+    public Category getCategoryById(int id) {
+        Category category = null;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            cursor = db.query(CategoriesTable.TABLE_NAME, null, CategoriesTable.COLUMN_ID + "=" + id, null, null, null, null);
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    category = new Category();
+                    category.setId(cursor.getInt(cursor.getColumnIndex(ListsTable.COLUMN_ID)));
+                    category.setName(cursor.getString(cursor.getColumnIndex(ListsTable.COLUMN_NAME)));
+                }
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            dbHelper.close();
+        }
+        return category;
+    }
+
+    @Override
+    public Unit createUnit(String name) {
+        Unit unit = null;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         try {
             ContentValues values = new ContentValues();
-            values.put(UnitsTable.COLUMN_NAME, unit);
+            values.put(UnitsTable.COLUMN_NAME, name);
 
-            createdUnitId = db.insert(UnitsTable.TABLE_NAME, null, values);
+            long id = db.insert(UnitsTable.TABLE_NAME, null, values);
+            if (id > -1) {
+                unit = new Unit(id, name);
+            }
         } finally {
             dbHelper.close();
         }
-        return createdUnitId;
+        return unit;
+    }
+
+    public List<Unit> getUnits() {
+        List<Unit> unitList = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            cursor = db.query(UnitsTable.TABLE_NAME, null, null, null, null, null, null);
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    do {
+                        Unit unit = new Unit();
+                        unit.setId(cursor.getInt(cursor.getColumnIndex(ListsTable.COLUMN_ID)));
+                        unit.setName(cursor.getString(cursor.getColumnIndex(ListsTable.COLUMN_NAME)));
+                        unitList.add(unit);
+                    } while (cursor.moveToNext());
+                }
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            dbHelper.close();
+        }
+        return unitList;
+    }
+
+    public Unit getUnitById(int id) {
+        Unit unit = null;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            cursor = db.query(UnitsTable.TABLE_NAME, null, UnitsTable.COLUMN_ID + " = " + id, null, null, null, null);
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    unit = new Unit();
+                    unit.setId(cursor.getInt(cursor.getColumnIndex(ListsTable.COLUMN_ID)));
+                    unit.setName(cursor.getString(cursor.getColumnIndex(ListsTable.COLUMN_NAME)));
+                }
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            dbHelper.close();
+        }
+        return unit;
     }
 
     @Override
-    public long createProduct(Product product) {
-        long createdProductionId = -1;
+    public Product createProduct(Product product) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-
         try {
             ContentValues productValues = new ContentValues();
             productValues.put(ProductsTable.COLUMN_NAME, product.getName());
             productValues.put(ProductsTable.COLUMN_PRIORITY, product.isPriority());
             productValues.put(ProductsTable.COLUMN_QUANTITY, product.getQuantity());
-            productValues.put(ProductsTable.COLUMN_UNIT_ID, product.getUnit());
-            productValues.put(ProductsTable.COLUMN_CATEGORY_ID, product.getCategory());
-            createdProductionId = db.insert(ProductsTable.TABLE_NAME, null, productValues);
+            productValues.put(ProductsTable.COLUMN_UNIT_ID, product.getUnit().getId());
+            productValues.put(ProductsTable.COLUMN_CATEGORY_ID, product.getCategory().getId());
+            long id = db.insert(ProductsTable.TABLE_NAME, null, productValues);
+            if (id > -1) {
+                product.setId(id);
+            }
+            else {
+                product = null;
+            }
         } finally {
             dbHelper.close();
         }
-
-        return createdProductionId;
+        return product;
     }
 
     @Override
-    public long createList(String name) {
+    public ProductsList createList(String name) {
+        ProductsList productsList = null;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long createdListId = -1;
         try {
             ContentValues listValues = new ContentValues();
             listValues.put(ListsTable.COLUMN_NAME, name);
 
-            createdListId = db.insert(ListsTable.TABLE_NAME, null, listValues);
+            long id = db.insert(ListsTable.TABLE_NAME, null, listValues);
+            if (id > -1) {
+                productsList = new ProductsList(id, name);
+            }
         } finally {
             dbHelper.close();
         }
-        return createdListId;
+        return productsList;
     }
 
     @Override
-    public long createListsProductsItem(long listId, long productId) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long createdId = -1;
-        try {
-            ContentValues listValues = new ContentValues();
-            listValues.put(Lists_ProductsTable.COLUMN_LIST_ID, listId);
-            listValues.put(Lists_ProductsTable.COLUMN_PRODUCT_ID, productId);
-
-            createdId = db.insert(Lists_ProductsTable.TABLE_NAME, null, listValues);
-        } finally {
-            dbHelper.close();
-        }
-        return createdId;
-    }
-
-    @Override
-    public List<ProductsList> getAllProductsList() {
+    public List<ProductsList> getLists() {
         List<ProductsList> productsLists = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = null;
@@ -140,7 +242,49 @@ public class DBDataSource implements DataSource {
         return productsLists;
     }
 
-    public List<Product> getAllProductsFromList(int listId) {
+    @Override
+    public int updateList(ProductsList pl) {
+        int updatedRowsNumber = 0;
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        try {
+            ContentValues listValues = new ContentValues();
+            listValues.put(ListsTable.COLUMN_NAME, pl.getName());
+            updatedRowsNumber = db.update(ListsTable.TABLE_NAME, listValues, ListsTable.COLUMN_ID + " = " + pl.getId(), null);
+        } finally {
+            dbHelper.close();
+        }
+        return updatedRowsNumber;
+    }
+
+    @Override
+    public int deleteList(long listId) {
+        int deletedRowsNumber = 0;
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        try {
+            deletedRowsNumber = db.delete(ListsTable.TABLE_NAME, ListsTable.COLUMN_ID + " = " + listId, null);
+        } finally {
+            dbHelper.close();
+        }
+        return deletedRowsNumber;
+    }
+
+    @Override
+    public long assignProductToList(long listId, long productId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        long createdId = -1;
+        try {
+            ContentValues listValues = new ContentValues();
+            listValues.put(Lists_ProductsTable.COLUMN_LIST_ID, listId);
+            listValues.put(Lists_ProductsTable.COLUMN_PRODUCT_ID, productId);
+
+            createdId = db.insert(Lists_ProductsTable.TABLE_NAME, null, listValues);
+        } finally {
+            dbHelper.close();
+        }
+        return createdId;
+    }
+
+    public List<Product> getProductsFromList(long listId) {
         List<Product> productLists = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         List<String> proructsIdList = new ArrayList<>();
@@ -164,7 +308,8 @@ public class DBDataSource implements DataSource {
                         product.setPriority(priority > 0 ? true : false);
                         product.setQuantity(cursor.getInt(cursor.getColumnIndex(ProductsTable.COLUMN_QUANTITY)));
                         product.setImage(cursor.getString(cursor.getColumnIndex(ProductsTable.COLUMN_IMAGE)));
-                        product.setCategory(cursor.getString(cursor.getColumnIndex(ProductsTable.COLUMN_CATEGORY_ID)));
+                        product.setCategory(getCategoryById(cursor.getInt(cursor.getColumnIndex(ProductsTable.COLUMN_CATEGORY_ID))));
+                        product.setUnit(getUnitById(cursor.getInt(cursor.getColumnIndex(ProductsTable.COLUMN_UNIT_ID))));
                         productLists.add(product);
                     } while (cursor.moveToNext());
                 }

@@ -104,9 +104,11 @@ public class ExpandableProductsAdapter extends BaseExpandableListAdapter
             convertView = infalInflater.inflate(R.layout.exp_list_item, null);
         }
 
-        TextView txtListChild = (TextView) convertView.findViewById(R.id.lblListItem);
+        TextView expListItemName = (TextView) convertView.findViewById(R.id.exp_list_item_name);
+        TextView expListItemQuantity = (TextView) convertView.findViewById(R.id.exp_list_item_quantity);
 
-        txtListChild.setText(product.getName());
+        expListItemName.setText(product.getName());
+        expListItemQuantity.setText(String.valueOf(product.getQuantity()) + " " + product.getUnit().getName());
         return convertView;
     }
 

@@ -5,4 +5,15 @@ package com.buylist.solomakha.buylistapp.storage.database.entities;
  */
 public class Unit extends BaseEntity
 {
+    public Unit() {}
+
+    public Unit(long id, String name) {
+        setId(id);
+        setName(name);
+    }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

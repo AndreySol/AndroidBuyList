@@ -3,6 +3,7 @@ package com.buylist.solomakha.buylistapp.storage.database.dal;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Category;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
 import com.buylist.solomakha.buylistapp.storage.database.entities.ProductsList;
+import com.buylist.solomakha.buylistapp.storage.database.entities.Unit;
 
 import java.util.List;
 
@@ -11,13 +12,17 @@ import java.util.List;
  */
 public interface DataSource
 {
-    long createCategory(String categoryName);
-    long createUnit(String unit);
-    long createProduct(Product product);
-    long createList(String product);
+    Category createCategory(String categoryName);
+    List<Category> getCategories();
+    Category getCategoryById(int id);
+    Unit createUnit(String unit);
+    Product createProduct(Product product);
+    ProductsList createList(String product);
+    int deleteList(long listId);
+    int updateList(ProductsList pl);
 
-    long createListsProductsItem(long listId,long productId);
+    long assignProductToList(long listId, long productId);
 
-    List<ProductsList> getAllProductsList();
-    List<Product> getAllProductsFromList(int listId);
+    List<ProductsList> getLists();
+    List<Product> getProductsFromList(long listId);
 }
