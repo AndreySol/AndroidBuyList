@@ -1,17 +1,17 @@
 package com.buylist.solomakha.buylistapp.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -19,29 +19,58 @@ import android.widget.ListView;
 import com.buylist.solomakha.buylistapp.R;
 import com.buylist.solomakha.buylistapp.storage.database.dal.DBDataSource;
 import com.buylist.solomakha.buylistapp.storage.database.dal.DataSource;
+import com.buylist.solomakha.buylistapp.storage.database.entities.Basket;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Category;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Basket;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Unit;
+import com.buylist.solomakha.buylistapp.ui.adapter.EntityAdapter;
+import com.buylist.solomakha.buylistapp.ui.adapter.Basket_Dialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity implements DialogInterface.OnClickListener {
+    private static final String LOG_TAG ="myLogs" ;
     boolean alreadyCreated = false;
     ListView listView;
-    ArrayAdapter listAdapter;
+
+    Basket_Dialog basket_dialog;
+    EntityAdapter listAdapter;
+
     List<Basket> productsListList = new ArrayList<>();
 
     private static final int MENU_CONTEXT_EDIT_ID = 0;
     private static final int MENU_CONTEXT_DELETE_ID = 1;
+
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+       // outState.set
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listAdapter = new ArrayAdapter<Basket>(this, R.layout.list_item, R.id.listItem);
+        basket_dialog = new Basket_Dialog();
+
+        basket_dialog.set_listener(this);
+        Log.d(LOG_TAG, "set_listener");
+        //if(savedInstanceState!=null) {
+            //restoreProgress(savedInstanceState);
+        //}
+
         listView = (ListView) findViewById(R.id.productList);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -51,7 +80,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         registerForContextMenu(listView);
+
+
+
+        DataSource dataSource = DBDataSource.getIns(this);
+        productsListList = dataSource.getBaskets();
+       // listAdapter = new ArrayAdapter<Basket>(this, R.layout.list_item, R.id.listItem, productsListList);
+
+        listAdapter = new EntityAdapter((ArrayList)productsListList,this);
+        listView.setAdapter(listAdapter);
+
+
+
 
         Button b = (Button) findViewById(R.id.but_fill);
         b.setOnClickListener(new View.OnClickListener() {
@@ -67,14 +109,17 @@ public class MainActivity extends AppCompatActivity {
         createListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCreateListDialog();
+                basket_dialog.show(getFragmentManager(),"");
             }
         });
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         refreshList();
     }
 
@@ -104,34 +149,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void refreshList() {
         productsListList = DBDataSource.getIns(this).getBaskets();
-        listAdapter.clear();
-        listAdapter.addAll(productsListList);
-    }
+        listAdapter.refresh(productsListList);
 
-    private void showCreateListDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Create list");
-        builder.setView(R.layout.create_list_dialog);
-
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                EditText edit = (EditText) ((AlertDialog) dialog).findViewById(R.id.list_name_textedit);
-                String listName = edit.getText().toString();
-                DBDataSource.getIns(MainActivity.this).createBasket(listName);
-                refreshList();
-                dialog.dismiss();
-            }
-        });
-
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builder.show();
     }
 
     private void showEditListDialog(final Basket pl) {
@@ -229,5 +248,19 @@ public class MainActivity extends AppCompatActivity {
 
         refreshList();
     }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+
+    Log.d(LOG_TAG,"in onClick");
+    EditText edit = (EditText) ((AlertDialog) dialog).findViewById(R.id.list_name_textedit);
+    String listName = edit.getText().toString();
+    Log.d(LOG_TAG,"listName is "+listName);
+    DBDataSource.getIns(this).createBasket(listName);
+    refreshList();
+
+   }
+
+
 }
 

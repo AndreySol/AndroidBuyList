@@ -12,6 +12,8 @@ import com.buylist.solomakha.buylistapp.storage.database.entities.Category;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Basket;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Unit;
+import com.buylist.solomakha.buylistapp.storage.database.entities.Basket;
+
 import com.buylist.solomakha.buylistapp.storage.database.tables.CategoriesTable;
 import com.buylist.solomakha.buylistapp.storage.database.tables.BasketsTable;
 import com.buylist.solomakha.buylistapp.storage.database.tables.BasketsProductsTable;
@@ -299,6 +301,7 @@ public class DBDataSource implements DataSource {
                         BasketProduct basketProduct = new BasketProduct();
                         basketProduct.setBought(cursor.getInt(cursor.getColumnIndex(BasketsProductsTable.COLUMN_BOUGHT)) > 0 ? true : false);
                         basketProductMap.put(cursor.getLong(cursor.getColumnIndex(BasketsProductsTable.COLUMN_PRODUCT_ID)), basketProduct);
+
                     } while (cursor.moveToNext());
                 }
             }
@@ -348,4 +351,6 @@ public class DBDataSource implements DataSource {
             dbHelper.close();
         }
     }
+
+
 }

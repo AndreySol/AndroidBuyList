@@ -6,8 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
  * Created by asolomakha on 1/3/2016.
  */
 public class BasketsProductsTable {
-
-    public final static String TABLE_NAME = "Baskets_Products";
+    public final static String TABLE_NAME = "BasketsProducts";
     public final static String COLUMN_ID = "Id";
     public final static String COLUMN_BASKET_ID = "BasketId";
     public final static String COLUMN_PRODUCT_ID = "ProductId";
