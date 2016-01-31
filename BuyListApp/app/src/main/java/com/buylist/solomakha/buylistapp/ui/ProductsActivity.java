@@ -27,21 +27,46 @@ public class ProductsActivity extends AppCompatActivity {
     private ExpandableProductsAdapter listAdapter;
     private ExpandableListView expListView;
 
-    private long listId;
+    private HashMap<String, List<Product>> listDataChild = new HashMap<String, List<Product>>();
+
+    private long basketId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_list);
 
-        listId = getIntent().getLongExtra("Id", -1);
+        basketId = getIntent().getLongExtra("Id", -1);
 
         expListView = (ExpandableListView) findViewById(R.id.products);
         listAdapter = new ExpandableProductsAdapter(this);
         expListView.setAdapter(listAdapter);
+        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+
+                List<String> headerList = new ArrayList<String>(listDataChild.keySet());
+
+                Product product = listDataChild.get(headerList.get(groupPosition)).get(childPosition);
+
+                DBDataSource.getIns(getApplicationContext()).markProductAsBought(basketId, product.getId(), !product.isBought());
+
+                refrashList();
+
+                return true;
+            }
+        });
 
         Button addProductButton = (Button) findViewById(R.id.add_production_button);
         addProductButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddProductDialog();
+            }
+        });
+
+        Button addProductFromListButton = (Button) findViewById(R.id.add_production_from_list_button);
+        addProductFromListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showAddProductDialog();
@@ -91,7 +116,7 @@ public class ProductsActivity extends AppCompatActivity {
                 product.setCategory(category);
 
                 DBDataSource.getIns(ProductsActivity.this).createProduct(product);
-                DBDataSource.getIns(ProductsActivity.this).assignProductToList(listId, product.getId());
+                DBDataSource.getIns(ProductsActivity.this).assignProductToBasket(basketId, product.getId());
 
                 refrashList();
                 dialog.dismiss();
@@ -109,8 +134,8 @@ public class ProductsActivity extends AppCompatActivity {
     }
 
     private void refrashList() {
-        HashMap<String, List<Product>> listDataChild = new HashMap<String, List<Product>>();
-        List<Product> productList = DBDataSource.getIns(this).getProductsFromList(listId);
+        List<Product> productList = DBDataSource.getIns(this).getProductsFromBasket(basketId);
+        listDataChild.clear();
 
         for (Product product : productList) {
             if (listDataChild.containsKey(product.getCategory().getName())) {

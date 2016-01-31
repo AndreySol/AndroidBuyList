@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.buylist.solomakha.buylistapp.storage.database.tables.CategoriesTable;
 import com.buylist.solomakha.buylistapp.storage.database.tables.ProductsTable;
-import com.buylist.solomakha.buylistapp.storage.database.tables.ListsTable;
-import com.buylist.solomakha.buylistapp.storage.database.tables.Lists_ProductsTable;
+import com.buylist.solomakha.buylistapp.storage.database.tables.BasketsTable;
+import com.buylist.solomakha.buylistapp.storage.database.tables.BasketsProductsTable;
 import com.buylist.solomakha.buylistapp.storage.database.tables.UnitsTable;
 
 /**
@@ -29,8 +29,8 @@ public class DataBaseHelper extends SQLiteOpenHelper
         ProductsTable.create(db);
         UnitsTable.create(db);
         CategoriesTable.create(db);
-        ListsTable.create(db);
-        Lists_ProductsTable.create(db);
+        BasketsTable.create(db);
+        BasketsProductsTable.create(db);
 
     }
 
@@ -40,7 +40,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
         ProductsTable.upgrade(db);
         UnitsTable.upgrade(db);
         CategoriesTable.upgrade(db);
-        ListsTable.upgrade(db);
-        Lists_ProductsTable.upgrade(db);
+        BasketsTable.upgrade(db);
+        BasketsProductsTable.upgrade(db);
     }
 }

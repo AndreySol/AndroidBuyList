@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.buylist.solomakha.buylistapp.R;
@@ -104,8 +105,15 @@ public class ExpandableProductsAdapter extends BaseExpandableListAdapter
             convertView = infalInflater.inflate(R.layout.exp_list_item, null);
         }
 
+        ImageView expListItemImage = (ImageView) convertView.findViewById(R.id.exp_list_item_image);
         TextView expListItemName = (TextView) convertView.findViewById(R.id.exp_list_item_name);
         TextView expListItemQuantity = (TextView) convertView.findViewById(R.id.exp_list_item_quantity);
+
+        if (product.isBought()) {
+            expListItemImage.setImageResource(R.drawable.plus);
+        } else {
+            expListItemImage.setImageResource(R.drawable.minus);
+        }
 
         expListItemName.setText(product.getName());
         expListItemQuantity.setText(String.valueOf(product.getQuantity()) + " " + product.getUnit().getName());

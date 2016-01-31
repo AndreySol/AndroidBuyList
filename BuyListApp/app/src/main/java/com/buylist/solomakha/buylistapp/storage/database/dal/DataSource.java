@@ -2,7 +2,7 @@ package com.buylist.solomakha.buylistapp.storage.database.dal;
 
 import com.buylist.solomakha.buylistapp.storage.database.entities.Category;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
-import com.buylist.solomakha.buylistapp.storage.database.entities.ProductsList;
+import com.buylist.solomakha.buylistapp.storage.database.entities.Basket;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Unit;
 
 import java.util.List;
@@ -15,14 +15,19 @@ public interface DataSource
     Category createCategory(String categoryName);
     List<Category> getCategories();
     Category getCategoryById(int id);
+
     Unit createUnit(String unit);
+
     Product createProduct(Product product);
-    ProductsList createList(String product);
-    int deleteList(long listId);
-    int updateList(ProductsList pl);
 
-    long assignProductToList(long listId, long productId);
+    Basket createBasket(String product);
+    int deleteBasket(long basketId);
+    int updateBasket(Basket basket);
+    List<Basket> getBaskets();
 
-    List<ProductsList> getLists();
-    List<Product> getProductsFromList(long listId);
+    List<Product> getProductsFromBasket(long basketId);
+
+    long assignProductToBasket(long basketId, long productId);
+
+    void markProductAsBought(long basketId, long productId, boolean bought);
 }

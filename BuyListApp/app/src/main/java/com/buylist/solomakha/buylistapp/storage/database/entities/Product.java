@@ -10,6 +10,7 @@ public class Product extends BaseEntity {
     private String image;
     private Unit unit;
     private Category category;
+    private boolean bought;
 
     public boolean isPriority() {
         return priority;
@@ -49,5 +50,13 @@ public class Product extends BaseEntity {
 
     public void setUnit(Unit unit) {
         this.unit = unit;
+    }
+
+    public boolean isBought() {
+        return bought;
+    }
+
+    public void setBought(boolean bought) {
+        this.bought = bought;
     }
 }

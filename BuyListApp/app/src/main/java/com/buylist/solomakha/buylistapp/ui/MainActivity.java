@@ -21,7 +21,7 @@ import com.buylist.solomakha.buylistapp.storage.database.dal.DBDataSource;
 import com.buylist.solomakha.buylistapp.storage.database.dal.DataSource;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Category;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
-import com.buylist.solomakha.buylistapp.storage.database.entities.ProductsList;
+import com.buylist.solomakha.buylistapp.storage.database.entities.Basket;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Unit;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     boolean alreadyCreated = false;
     ListView listView;
     ArrayAdapter listAdapter;
-    List<ProductsList> productsListList = new ArrayList<>();
+    List<Basket> productsListList = new ArrayList<>();
 
     private static final int MENU_CONTEXT_EDIT_ID = 0;
     private static final int MENU_CONTEXT_DELETE_ID = 1;
@@ -41,12 +41,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listAdapter = new ArrayAdapter<ProductsList>(this, R.layout.list_item, R.id.listItem);
+        listAdapter = new ArrayAdapter<Basket>(this, R.layout.list_item, R.id.listItem);
         listView = (ListView) findViewById(R.id.productList);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ProductsList productsList = productsListList.get(position);
+                Basket productsList = productsListList.get(position);
                 startActivity(new Intent(getApplicationContext(), ProductsActivity.class).putExtra("Id", productsList.getId()));
             }
         });
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 showEditListDialog(productsListList.get(info.position));
                 return true;
             case MENU_CONTEXT_DELETE_ID:
-                DBDataSource.getIns(this).deleteList(productsListList.get(info.position).getId());
+                DBDataSource.getIns(this).deleteBasket(productsListList.get(info.position).getId());
                 refreshList();
                 return true;
             default:
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshList() {
-        productsListList = DBDataSource.getIns(this).getLists();
+        productsListList = DBDataSource.getIns(this).getBaskets();
         listAdapter.clear();
         listAdapter.addAll(productsListList);
     }
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 EditText edit = (EditText) ((AlertDialog) dialog).findViewById(R.id.list_name_textedit);
                 String listName = edit.getText().toString();
-                DBDataSource.getIns(MainActivity.this).createList(listName);
+                DBDataSource.getIns(MainActivity.this).createBasket(listName);
                 refreshList();
                 dialog.dismiss();
             }
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void showEditListDialog(final ProductsList pl) {
+    private void showEditListDialog(final Basket pl) {
 
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.create_list_dialog, null);
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 EditText edit = (EditText) ((AlertDialog) dialog).findViewById(R.id.list_name_textedit);
                 pl.setName(edit.getText().toString());
-                DBDataSource.getIns(MainActivity.this).updateList(pl);
+                DBDataSource.getIns(MainActivity.this).updateBasket(pl);
                 refreshList();
             }
         });
@@ -178,9 +178,9 @@ public class MainActivity extends AppCompatActivity {
         Unit unitL = dataSource.createUnit("L.");
         Unit unitPcs = dataSource.createUnit("pcs");
 
-        ProductsList listPostProducts = dataSource.createList("PostProducts");
-        ProductsList listPostClothes = dataSource.createList("PostClothes");
-        ProductsList listPostAppliances = dataSource.createList("PostAppliances");
+        Basket listPostProducts = dataSource.createBasket("PostProducts");
+        Basket listPostClothes = dataSource.createBasket("PostClothes");
+        Basket listPostAppliances = dataSource.createBasket("PostAppliances");
 
         //ПРОДУКТ:
         //продукты  привязка к UNIT and CATEGORY
@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
         product.setQuantity(2);
         product.setUnit(unitKg);
         Product productId = dataSource.createProduct(product);
-        dataSource.assignProductToList(listPostProducts.getId(), productId.getId());//связка  со списком
+        dataSource.assignProductToBasket(listPostProducts.getId(), productId.getId());//связка  со списком
 
         // Kettle - не внесен  в список
         Product product1 = new Product();
@@ -202,8 +202,8 @@ public class MainActivity extends AppCompatActivity {
         product1.setQuantity(1);
         product1.setUnit(unitPcs);
         Product productId1 = dataSource.createProduct(product1);
-        dataSource.assignProductToList(listPostProducts.getId(), productId1.getId());//связка  со списком
-        dataSource.assignProductToList(listPostClothes.getId(), productId1.getId());//связка  со списком
+        dataSource.assignProductToBasket(listPostProducts.getId(), productId1.getId());//связка  со списком
+        dataSource.assignProductToBasket(listPostClothes.getId(), productId1.getId());//связка  со списком
 
         // Banana -  внесен  в список
         Product product2 = new Product();
@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
         product2.setQuantity(1.5f);
         product2.setUnit(unitKg);
         Product productId2 = dataSource.createProduct(product2);
-        dataSource.assignProductToList(listPostProducts.getId(), productId2.getId());//связка  со списком
+        dataSource.assignProductToBasket(listPostProducts.getId(), productId2.getId());//связка  со списком
 
         // Orange -  внесен  в список
         Product product3 = new Product();
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         product3.setQuantity(2.5f);
         product3.setUnit(unitKg);
         Product productId3 = dataSource.createProduct(product3);
-        dataSource.assignProductToList(listPostProducts.getId(), productId3.getId());//связка  со списком
+        dataSource.assignProductToBasket(listPostProducts.getId(), productId3.getId());//связка  со списком
 
         alreadyCreated = true;
 
