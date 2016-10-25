@@ -16,4 +16,23 @@ public class Unit extends BaseEntity
     public String toString() {
         return getName();
     }
+
+    @Override
+    public boolean equals(Object unitObj)
+    {
+        boolean result = false;
+        if (this == unitObj)
+        {
+            result = true;
+        }
+        else if (unitObj instanceof Unit)
+        {
+            Unit unit = (Unit) unitObj;
+            if (getId() == unit.getId() && getName().equals(unit.getName()))
+            {
+                result = true;
+            }
+        }
+        return result;
+    }
 }

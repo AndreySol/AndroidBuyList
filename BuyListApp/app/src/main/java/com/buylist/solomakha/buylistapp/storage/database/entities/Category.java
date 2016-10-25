@@ -15,4 +15,23 @@ public class Category extends BaseEntity {
     public String toString() {
         return getName();
     }
+
+    @Override
+    public boolean equals(Object categoryObj)
+    {
+        boolean result = false;
+        if (this == categoryObj)
+        {
+            result = true;
+        }
+        else if (categoryObj instanceof Category)
+        {
+            Category category = (Category) categoryObj;
+            if (getId() == category.getId() && getName().equals(category.getName()))
+            {
+                result = true;
+            }
+        }
+        return result;
+    }
 }

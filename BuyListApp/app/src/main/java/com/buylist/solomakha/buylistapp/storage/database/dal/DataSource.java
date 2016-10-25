@@ -20,6 +20,7 @@ public interface DataSource
     Category getCategoryById(int id);
 
     Unit createUnit(String unit);
+    List<Unit> getUnits();
 
     Product createProduct(Product product);
 

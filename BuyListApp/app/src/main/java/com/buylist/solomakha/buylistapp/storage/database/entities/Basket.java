@@ -5,9 +5,12 @@ package com.buylist.solomakha.buylistapp.storage.database.entities;
  */
 public class Basket extends BaseEntity
 {
-    public Basket(){}
+    public Basket()
+    {
+    }
 
-    public Basket(long id, String name) {
+    public Basket(long id, String name)
+    {
         setId(id);
         setName(name);
     }
@@ -16,5 +19,24 @@ public class Basket extends BaseEntity
     public String toString()
     {
         return getName();
+    }
+
+    @Override
+    public boolean equals(Object basketObj)
+    {
+        boolean result = false;
+        if (this == basketObj)
+        {
+            result = true;
+        }
+        else if (basketObj instanceof Basket)
+        {
+            Basket basket = (Basket) basketObj;
+            if (getId() == basket.getId() && getName().equals(basket.getName()))
+            {
+                result = true;
+            }
+        }
+        return result;
     }
 }

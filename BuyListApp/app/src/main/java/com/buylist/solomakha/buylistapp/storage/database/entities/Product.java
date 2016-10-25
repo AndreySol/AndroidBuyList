@@ -12,6 +12,22 @@ public class Product extends BaseEntity {
     private Category category;
     private boolean bought;
 
+    public Product()
+    {
+    }
+
+    public Product(int id, String name, boolean priority, float quantity, String image, Unit unit, Category category, boolean bought)
+    {
+        setId(id);
+        setName(name);
+        this.priority = priority;
+        this.quantity = quantity;
+        this.image = image;
+        this.unit = unit;
+        this.category = category;
+        this.bought = bought;
+    }
+
     public boolean isPriority() {
         return priority;
     }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -17,21 +18,24 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.buylist.solomakha.buylistapp.R;
-import com.buylist.solomakha.buylistapp.storage.database.dal.DBDataSource;
+import com.buylist.solomakha.buylistapp.storage.database.dal.DataBase;
 import com.buylist.solomakha.buylistapp.storage.database.dal.DataSource;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Basket;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Category;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
-import com.buylist.solomakha.buylistapp.storage.database.entities.Basket;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Unit;
-import com.buylist.solomakha.buylistapp.ui.adapter.EntityAdapter;
 import com.buylist.solomakha.buylistapp.ui.adapter.Basket_Dialog;
+import com.buylist.solomakha.buylistapp.ui.adapter.EntityAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
-public class MainActivity extends Activity implements DialogInterface.OnClickListener {
-    private static final String LOG_TAG ="myLogs" ;
+public class MainActivity extends Activity implements DialogInterface.OnClickListener
+{
+
+    private static final String LOG_TAG = "myLogs";
     boolean alreadyCreated = false;
     ListView listView;
 
@@ -45,21 +49,23 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
         super.onRestoreInstanceState(savedInstanceState);
 
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState)
+    {
         super.onSaveInstanceState(outState);
-       // outState.set
+        // outState.set
     }
 
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -68,13 +74,15 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         basket_dialog.set_listener(this);
         Log.d(LOG_TAG, "set_listener");
         //if(savedInstanceState!=null) {
-            //restoreProgress(savedInstanceState);
+        //restoreProgress(savedInstanceState);
         //}
 
         listView = (ListView) findViewById(R.id.productList);
         listView.setAdapter(listAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
                 Basket productsList = productsListList.get(position);
                 startActivity(new Intent(getApplicationContext(), ProductsActivity.class).putExtra("Id", productsList.getId()));
             }
@@ -84,62 +92,66 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         registerForContextMenu(listView);
 
 
-
-        DataSource dataSource = DBDataSource.getIns(this);
+        DataSource dataSource = DataBase.getInstance(this);
         productsListList = dataSource.getBaskets();
-       // listAdapter = new ArrayAdapter<Basket>(this, R.layout.list_item, R.id.listItem, productsListList);
+        // listAdapter = new ArrayAdapter<Basket>(this, R.layout.list_item, R.id.listItem, productsListList);
 
-        listAdapter = new EntityAdapter((ArrayList)productsListList,this);
+        listAdapter = new EntityAdapter((ArrayList) productsListList, this);
         listView.setAdapter(listAdapter);
 
 
-
-
         Button b = (Button) findViewById(R.id.but_fill);
-        b.setOnClickListener(new View.OnClickListener() {
+        b.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                if (!alreadyCreated) {
+            public void onClick(View v)
+            {
+                if (!alreadyCreated)
+                {
                     fillDBDefaultValues();
                 }
             }
         });
 
         Button createListButton = (Button) findViewById(R.id.create_list_button);
-        createListButton.setOnClickListener(new View.OnClickListener() {
+        createListButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                basket_dialog.show(getFragmentManager(),"");
+            public void onClick(View v)
+            {
+                basket_dialog.show(getFragmentManager(), "");
             }
         });
-
-
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume()
+    {
         super.onResume();
-
         refreshList();
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        if (v.getId() == R.id.productList) {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    {
+        if (v.getId() == R.id.productList)
+        {
             menu.add(Menu.NONE, MENU_CONTEXT_EDIT_ID, Menu.NONE, "Edit");
             menu.add(Menu.NONE, MENU_CONTEXT_DELETE_ID, Menu.NONE, "Delete");
         }
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(MenuItem item)
+    {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()) {
+        switch (item.getItemId())
+        {
             case MENU_CONTEXT_EDIT_ID:
                 showEditListDialog(productsListList.get(info.position));
                 return true;
             case MENU_CONTEXT_DELETE_ID:
-                DBDataSource.getIns(this).deleteBasket(productsListList.get(info.position).getId());
+                DataBase.getInstance(this).deleteBasket(productsListList.get(info.position).getId());
                 refreshList();
                 return true;
             default:
@@ -147,13 +159,15 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         }
     }
 
-    private void refreshList() {
-        productsListList = DBDataSource.getIns(this).getBaskets();
+    private void refreshList()
+    {
+        productsListList = DataBase.getInstance(this).getBaskets();
         listAdapter.refresh(productsListList);
 
     }
 
-    private void showEditListDialog(final Basket pl) {
+    private void showEditListDialog(final Basket pl)
+    {
 
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.create_list_dialog, null);
@@ -165,19 +179,23 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         EditText editText = (EditText) dialogView.findViewById(R.id.list_name_textedit);
         editText.setText(pl.getName());
 
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+        {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which)
+            {
                 EditText edit = (EditText) ((AlertDialog) dialog).findViewById(R.id.list_name_textedit);
                 pl.setName(edit.getText().toString());
-                DBDataSource.getIns(MainActivity.this).updateBasket(pl);
+                DataBase.getInstance(MainActivity.this).updateBasket(pl);
                 refreshList();
             }
         });
 
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
+        {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which)
+            {
                 dialog.dismiss();
             }
         });
@@ -185,8 +203,9 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         builder.show();
     }
 
-    private void fillDBDefaultValues() {
-        DataSource dataSource = DBDataSource.getIns(this);
+    private void fillDBDefaultValues()
+    {
+        DataSource dataSource = DataBase.getInstance(this);
         Category categoryOthers = dataSource.createCategory("Others");
         Category categoryDairy = dataSource.createCategory("Dairy");
         Category categoryMeat = dataSource.createCategory("Meat");
@@ -250,17 +269,14 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
     }
 
     @Override
-    public void onClick(DialogInterface dialog, int which) {
+    public void onClick(DialogInterface dialog, int which)
+    {
+        Log.d(LOG_TAG, "in onClick");
+        EditText edit = (EditText) ((AlertDialog) dialog).findViewById(R.id.list_name_textedit);
+        String listName = edit.getText().toString();
+        Log.d(LOG_TAG, "listName is " + listName);
+        DataBase.getInstance(this).createBasket(listName);
+        refreshList();
 
-    Log.d(LOG_TAG,"in onClick");
-    EditText edit = (EditText) ((AlertDialog) dialog).findViewById(R.id.list_name_textedit);
-    String listName = edit.getText().toString();
-    Log.d(LOG_TAG,"listName is "+listName);
-    DBDataSource.getIns(this).createBasket(listName);
-    refreshList();
-
-   }
-
-
+    }
 }
-

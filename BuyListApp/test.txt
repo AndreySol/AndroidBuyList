@@ -1,0 +1,72 @@
+Applications Memory Usage (kB):
+Uptime: 81700650 Realtime: 363488415
+
+** MEMINFO in pid 21427 [com.buylist.solomakha.buylistapp] **
+                   Pss  Private  Private  Swapped     Heap     Heap     Heap
+                 Total    Dirty    Clean    Dirty     Size    Alloc     Free
+                ------   ------   ------   ------   ------   ------   ------
+  Native Heap     4109     4080        0     2184    16384     7559     8824
+  Dalvik Heap      692      628        0    27228    37382    29225     8157
+ Dalvik Other      520      520        0        4                           
+        Stack      216      216        0        0                           
+    Other dev        4        0        4        0                           
+     .so mmap     1896      964        0     1888                           
+    .apk mmap      174        0        4        0                           
+    .ttf mmap       42        0        0        0                           
+    .dex mmap      472        0      468        0                           
+    .oat mmap      943        0      264        0                           
+    .art mmap     1249      556        0        0                           
+   Other mmap        8        4        0        0                           
+    GL mtrack    10347    10347        0        0                           
+      Unknown      228      228        0       80                           
+        TOTAL    20900    17543      740    31384    53766    36784    16981
+ 
+ Objects
+               Views:       10         ViewRootImpl:        1
+         AppContexts:        3           Activities:        1
+              Assets:        3        AssetManagers:        3
+       Local Binders:        7        Proxy Binders:       20
+       Parcel memory:        3         Parcel count:       12
+    Death Recipients:        0      OpenSSL Sockets:        0
+ 
+ SQL
+         MEMORY_USED:        0
+  PAGECACHE_OVERFLOW:        0          MALLOC_SIZE:       62
+ 
+Applications Memory Usage (kB):
+Uptime: 81774710 Realtime: 363562475
+
+** MEMINFO in pid 25220 [com.rim.mobilefusion.client.dev] **
+                   Pss  Private  Private  Swapped     Heap     Heap     Heap
+                 Total    Dirty    Clean    Dirty     Size    Alloc     Free
+                ------   ------   ------   ------   ------   ------   ------
+  Native Heap    18907    18808        8     1080    40960    20498    20461
+  Dalvik Heap    22360    21528      400    26808    62262    49326    12936
+ Dalvik Other     1657     1656        0        0                           
+        Stack      680      680        0        0                           
+       Ashmem      128      128        0        0                           
+    Other dev        5        0        4        0                           
+     .so mmap    23257      916    18628     1408                           
+    .apk mmap     1363        0      796        0                           
+    .ttf mmap      171        0       72        0                           
+    .dex mmap    14196        0    14188        0                           
+    .oat mmap    12004        0     8068        0                           
+    .art mmap    21260    18376      900        0                           
+   Other mmap      730        4      680        0                           
+   EGL mtrack    43236    43236        0        0                           
+    GL mtrack    32249    32249        0        0                           
+      Unknown     1952     1952        0       40                           
+        TOTAL   194155   139533    43744    29336   103222    69824    33397
+ 
+ Objects
+               Views:      155         ViewRootImpl:        3
+         AppContexts:       10           Activities:        4
+              Assets:        4        AssetManagers:        4
+       Local Binders:       46        Proxy Binders:       62
+       Parcel memory:       18         Parcel count:       74
+    Death Recipients:        1      OpenSSL Sockets:        3
+ 
+ SQL
+         MEMORY_USED:        0
+  PAGECACHE_OVERFLOW:        0          MALLOC_SIZE:        0
+ 

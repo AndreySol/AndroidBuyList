@@ -15,7 +15,7 @@ public class BasketsTable {
     private final static String CREATE_TABLE = " create table " +
             TABLE_NAME + "( " +
             COLUMN_ID + " integer primary key autoincrement, " +
-            COLUMN_NAME + " text not null " +
+            COLUMN_NAME + " text not null unique" +
             ");";
 
     public static void create(SQLiteDatabase db) {
