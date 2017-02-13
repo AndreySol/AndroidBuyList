@@ -40,11 +40,11 @@ public class BasketTest
     @Test
     public void testGetBaskets()
     {
-        Basket basket1 = DataBase.getInstance(context).createBasket("My first basket");
-        Basket basket2 = DataBase.getInstance(context).createBasket("My second basket");
-        Basket basket3 = DataBase.getInstance(context).createBasket("My third basket");
+        Basket basket1 = DataBaseStorage.getInstance(context).createBasket("My first basket");
+        Basket basket2 = DataBaseStorage.getInstance(context).createBasket("My second basket");
+        Basket basket3 = DataBaseStorage.getInstance(context).createBasket("My third basket");
 
-        List<Basket> baskets = DataBase.getInstance(context).getBaskets();
+        List<Basket> baskets = DataBaseStorage.getInstance(context).getBaskets();
 
         assertEquals(baskets.size(), 3);
 
@@ -60,9 +60,9 @@ public class BasketTest
     @Test
     public void testCreateBaskets()
     {
-        DataBase.getInstance(context).createBasket("My first basket");
-        DataBase.getInstance(context).createBasket("My second basket");
-        List<Basket> baskets = DataBase.getInstance(context).getBaskets();
+        DataBaseStorage.getInstance(context).createBasket("My first basket");
+        DataBaseStorage.getInstance(context).createBasket("My second basket");
+        List<Basket> baskets = DataBaseStorage.getInstance(context).getBaskets();
         assertEquals(baskets.get(0).getName(), "My first basket");
         assertEquals(baskets.get(1).getName(), "My second basket");
     }
@@ -70,47 +70,47 @@ public class BasketTest
     @Test
     public void testCreateNullBasket()
     {
-        DataBase.getInstance(context).createBasket(null);
-        List<Basket> baskets = DataBase.getInstance(context).getBaskets();
+        DataBaseStorage.getInstance(context).createBasket(null);
+        List<Basket> baskets = DataBaseStorage.getInstance(context).getBaskets();
         assertEquals(baskets.size(), 0);
     }
 
     @Test
     public void testCreateDuplicateBasket()
     {
-        DataBase.getInstance(context).createBasket("My first basket");
-        DataBase.getInstance(context).createBasket("My first basket");
-        List<Basket> baskets = DataBase.getInstance(context).getBaskets();
+        DataBaseStorage.getInstance(context).createBasket("My first basket");
+        DataBaseStorage.getInstance(context).createBasket("My first basket");
+        List<Basket> baskets = DataBaseStorage.getInstance(context).getBaskets();
         assertEquals(baskets.size(), 1);
     }
 
     @Test
     public void testDeleteBasket()
     {
-        Basket basket = DataBase.getInstance(context).createBasket("My first basket");
-        int deletedRowsNumber = DataBase.getInstance(context).deleteBasket(basket.getId());
+        Basket basket = DataBaseStorage.getInstance(context).createBasket("My first basket");
+        int deletedRowsNumber = DataBaseStorage.getInstance(context).deleteBasket(basket.getId());
         assertEquals(deletedRowsNumber, 1);
-        assertEquals(DataBase.getInstance(context).getBaskets().size(), 0);
+        assertEquals(DataBaseStorage.getInstance(context).getBaskets().size(), 0);
     }
 
     @Test
     public void testDeleteDoesNotExistBasket()
     {
-        Basket basket = DataBase.getInstance(context).createBasket("My first basket");
-        DataBase.getInstance(context).deleteBasket(basket.getId());
-        int deletedRowsNumber = DataBase.getInstance(context).deleteBasket(basket.getId());
+        Basket basket = DataBaseStorage.getInstance(context).createBasket("My first basket");
+        DataBaseStorage.getInstance(context).deleteBasket(basket.getId());
+        int deletedRowsNumber = DataBaseStorage.getInstance(context).deleteBasket(basket.getId());
         assertEquals(deletedRowsNumber, 0);
-        assertEquals(DataBase.getInstance(context).getBaskets().size(), 0);
+        assertEquals(DataBaseStorage.getInstance(context).getBaskets().size(), 0);
     }
 
     @Test
     public void testUpdateBasket()
     {
-        Basket basket = DataBase.getInstance(context).createBasket("My first basket");
+        Basket basket = DataBaseStorage.getInstance(context).createBasket("My first basket");
         basket.setName("My first updated basket");
-        int updatedRowsNumber = DataBase.getInstance(context).updateBasket(basket);
+        int updatedRowsNumber = DataBaseStorage.getInstance(context).updateBasket(basket);
 
-        List<Basket> baskets = DataBase.getInstance(context).getBaskets();
+        List<Basket> baskets = DataBaseStorage.getInstance(context).getBaskets();
 
         assertEquals(updatedRowsNumber, 1);
         assertEquals(baskets.size(), 1);
@@ -122,7 +122,7 @@ public class BasketTest
     {
         Basket basket = new Basket(11, "Test Basket");
         basket.setName("My first updated basket");
-        int updatedRowsNumber = DataBase.getInstance(context).updateBasket(basket);
+        int updatedRowsNumber = DataBaseStorage.getInstance(context).updateBasket(basket);
 
         assertEquals(updatedRowsNumber, 0);
     }

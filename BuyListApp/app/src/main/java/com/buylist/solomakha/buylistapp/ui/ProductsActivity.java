@@ -13,7 +13,7 @@ import android.widget.ExpandableListView;
 import android.widget.Spinner;
 
 import com.buylist.solomakha.buylistapp.R;
-import com.buylist.solomakha.buylistapp.storage.database.dal.DataBase;
+import com.buylist.solomakha.buylistapp.storage.database.dal.DataBaseStorage;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Category;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Unit;
@@ -49,7 +49,7 @@ public class ProductsActivity extends AppCompatActivity {
 
                 Product product = listDataChild.get(headerList.get(groupPosition)).get(childPosition);
 
-                DataBase.getInstance(getApplicationContext()).markProductAsBought(basketId, product.getId(), !product.isBought());
+                DataBaseStorage.getInstance(getApplicationContext()).markProductAsBought(basketId, product.getId(), !product.isBought());
 
                 refrashList();
 
@@ -89,13 +89,13 @@ public class ProductsActivity extends AppCompatActivity {
         builder.setTitle("Add product");
         builder.setView(dialogView);
 
-        List<Unit> unitList = DataBase.getInstance(this).getUnits();
+        List<Unit> unitList = DataBaseStorage.getInstance(this).getUnits();
         ArrayAdapter<Unit> unityAdapter = new ArrayAdapter<Unit>(this, android.R.layout.simple_spinner_item, unitList);
         unityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         final Spinner quantitySpinner = (Spinner) dialogView.findViewById(R.id.product_quantity_spinner);
         quantitySpinner.setAdapter(unityAdapter);
 
-        List<Category> categoryList = DataBase.getInstance(this).getCategories();
+        List<Category> categoryList = DataBaseStorage.getInstance(this).getCategories();
         ArrayAdapter<Category> categoryAdapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_item, categoryList);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         final Spinner categorySpinner = (Spinner) dialogView.findViewById(R.id.product_category_spinner);
@@ -115,8 +115,8 @@ public class ProductsActivity extends AppCompatActivity {
                 product.setUnit(unit);
                 product.setCategory(category);
 
-                DataBase.getInstance(ProductsActivity.this).createProduct(product);
-                DataBase.getInstance(ProductsActivity.this).assignProductToBasket(basketId, product.getId());
+                DataBaseStorage.getInstance(ProductsActivity.this).createProduct(product);
+                DataBaseStorage.getInstance(ProductsActivity.this).assignProductToBasket(basketId, product.getId());
 
                 refrashList();
                 dialog.dismiss();
@@ -134,7 +134,7 @@ public class ProductsActivity extends AppCompatActivity {
     }
 
     private void refrashList() {
-        List<Product> productList = DataBase.getInstance(this).getProductsFromBasket(basketId);
+        List<Product> productList = DataBaseStorage.getInstance(this).getProductsFromBasket(basketId);
         listDataChild.clear();
 
         for (Product product : productList) {

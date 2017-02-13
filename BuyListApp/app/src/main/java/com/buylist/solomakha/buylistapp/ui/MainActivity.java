@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -18,8 +17,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.buylist.solomakha.buylistapp.R;
-import com.buylist.solomakha.buylistapp.storage.database.dal.DataBase;
-import com.buylist.solomakha.buylistapp.storage.database.dal.DataSource;
+import com.buylist.solomakha.buylistapp.storage.database.dal.DataBaseStorage;
+import com.buylist.solomakha.buylistapp.storage.database.dal.Storage;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Basket;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Category;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
@@ -29,8 +28,6 @@ import com.buylist.solomakha.buylistapp.ui.adapter.EntityAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Logger;
 
 public class MainActivity extends Activity implements DialogInterface.OnClickListener
 {
@@ -92,8 +89,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         registerForContextMenu(listView);
 
 
-        DataSource dataSource = DataBase.getInstance(this);
-        productsListList = dataSource.getBaskets();
+        Storage storage = DataBaseStorage.getInstance(this);
+        productsListList = storage.getBaskets();
         // listAdapter = new ArrayAdapter<Basket>(this, R.layout.list_item, R.id.listItem, productsListList);
 
         listAdapter = new EntityAdapter((ArrayList) productsListList, this);
@@ -151,7 +148,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
                 showEditListDialog(productsListList.get(info.position));
                 return true;
             case MENU_CONTEXT_DELETE_ID:
-                DataBase.getInstance(this).deleteBasket(productsListList.get(info.position).getId());
+                DataBaseStorage.getInstance(this).deleteBasket(productsListList.get(info.position).getId());
                 refreshList();
                 return true;
             default:
@@ -161,7 +158,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 
     private void refreshList()
     {
-        productsListList = DataBase.getInstance(this).getBaskets();
+        productsListList = DataBaseStorage.getInstance(this).getBaskets();
         listAdapter.refresh(productsListList);
 
     }
@@ -186,7 +183,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
             {
                 EditText edit = (EditText) ((AlertDialog) dialog).findViewById(R.id.list_name_textedit);
                 pl.setName(edit.getText().toString());
-                DataBase.getInstance(MainActivity.this).updateBasket(pl);
+                DataBaseStorage.getInstance(MainActivity.this).updateBasket(pl);
                 refreshList();
             }
         });
@@ -205,20 +202,20 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 
     private void fillDBDefaultValues()
     {
-        DataSource dataSource = DataBase.getInstance(this);
-        Category categoryOthers = dataSource.createCategory("Others");
-        Category categoryDairy = dataSource.createCategory("Dairy");
-        Category categoryMeat = dataSource.createCategory("Meat");
-        Category categoryFruits = dataSource.createCategory("Fruit");
-        Category categoryAppliances = dataSource.createCategory("Appliances");
+        Storage storage = DataBaseStorage.getInstance(this);
+        Category categoryOthers = storage.createCategory("Others");
+        Category categoryDairy = storage.createCategory("Dairy");
+        Category categoryMeat = storage.createCategory("Meat");
+        Category categoryFruits = storage.createCategory("Fruit");
+        Category categoryAppliances = storage.createCategory("Appliances");
 
-        Unit unitKg = dataSource.createUnit("kg");
-        Unit unitL = dataSource.createUnit("L.");
-        Unit unitPcs = dataSource.createUnit("pcs");
+        Unit unitKg = storage.createUnit("kg");
+        Unit unitL = storage.createUnit("L.");
+        Unit unitPcs = storage.createUnit("pcs");
 
-        Basket listPostProducts = dataSource.createBasket("PostProducts");
-        Basket listPostClothes = dataSource.createBasket("PostClothes");
-        Basket listPostAppliances = dataSource.createBasket("PostAppliances");
+        Basket listPostProducts = storage.createBasket("PostProducts");
+        Basket listPostClothes = storage.createBasket("PostClothes");
+        Basket listPostAppliances = storage.createBasket("PostAppliances");
 
         //ПРОДУКТ:
         //продукты  привязка к UNIT and CATEGORY
@@ -229,8 +226,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         product.setPriority(false);
         product.setQuantity(2);
         product.setUnit(unitKg);
-        Product productId = dataSource.createProduct(product);
-        dataSource.assignProductToBasket(listPostProducts.getId(), productId.getId());//связка  со списком
+        Product productId = storage.createProduct(product);
+        storage.assignProductToBasket(listPostProducts.getId(), productId.getId());//связка  со списком
 
         // Kettle - не внесен  в список
         Product product1 = new Product();
@@ -239,9 +236,9 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         product1.setPriority(false);
         product1.setQuantity(1);
         product1.setUnit(unitPcs);
-        Product productId1 = dataSource.createProduct(product1);
-        dataSource.assignProductToBasket(listPostProducts.getId(), productId1.getId());//связка  со списком
-        dataSource.assignProductToBasket(listPostClothes.getId(), productId1.getId());//связка  со списком
+        Product productId1 = storage.createProduct(product1);
+        storage.assignProductToBasket(listPostProducts.getId(), productId1.getId());//связка  со списком
+        storage.assignProductToBasket(listPostClothes.getId(), productId1.getId());//связка  со списком
 
         // Banana -  внесен  в список
         Product product2 = new Product();
@@ -250,8 +247,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         product2.setPriority(false);
         product2.setQuantity(1.5f);
         product2.setUnit(unitKg);
-        Product productId2 = dataSource.createProduct(product2);
-        dataSource.assignProductToBasket(listPostProducts.getId(), productId2.getId());//связка  со списком
+        Product productId2 = storage.createProduct(product2);
+        storage.assignProductToBasket(listPostProducts.getId(), productId2.getId());//связка  со списком
 
         // Orange -  внесен  в список
         Product product3 = new Product();
@@ -260,8 +257,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         product3.setPriority(false);
         product3.setQuantity(2.5f);
         product3.setUnit(unitKg);
-        Product productId3 = dataSource.createProduct(product3);
-        dataSource.assignProductToBasket(listPostProducts.getId(), productId3.getId());//связка  со списком
+        Product productId3 = storage.createProduct(product3);
+        storage.assignProductToBasket(listPostProducts.getId(), productId3.getId());//связка  со списком
 
         alreadyCreated = true;
 
@@ -275,7 +272,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         EditText edit = (EditText) ((AlertDialog) dialog).findViewById(R.id.list_name_textedit);
         String listName = edit.getText().toString();
         Log.d(LOG_TAG, "listName is " + listName);
-        DataBase.getInstance(this).createBasket(listName);
+        DataBaseStorage.getInstance(this).createBasket(listName);
         refreshList();
 
     }

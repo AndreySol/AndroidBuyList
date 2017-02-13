@@ -1,12 +1,8 @@
 package com.buylist.solomakha.buylistapp.storage.database.dal;
 
-import android.app.IntentService;
 import android.content.Context;
-import android.content.Intent;
-import android.util.LongSparseArray;
 import android.util.SparseArray;
 
-import com.buylist.solomakha.buylistapp.storage.database.entities.Category;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Unit;
 
 import org.junit.Test;
@@ -46,11 +42,11 @@ public class UnitTest
     @Test
     public void testGetCategories()
     {
-        Unit unit1 = DataBase.getInstance(context).createUnit("My first unit");
-        Unit unit2 = DataBase.getInstance(context).createUnit("My second unit");
-        Unit unit3 = DataBase.getInstance(context).createUnit("My third unit");
+        Unit unit1 = DataBaseStorage.getInstance(context).createUnit("My first unit");
+        Unit unit2 = DataBaseStorage.getInstance(context).createUnit("My second unit");
+        Unit unit3 = DataBaseStorage.getInstance(context).createUnit("My third unit");
 
-        List<Unit> units = DataBase.getInstance(context).getUnits();
+        List<Unit> units = DataBaseStorage.getInstance(context).getUnits();
 
         assertEquals(units.size(), 3);
 

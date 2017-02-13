@@ -5,7 +5,7 @@ package com.buylist.solomakha.buylistapp.storage.database.entities;
  */
 public class BasketProduct extends BaseEntity {
     long basketId;
-    long proructId;
+    long productId;
     boolean bought;
 
     public long getBasketId() {
@@ -16,12 +16,12 @@ public class BasketProduct extends BaseEntity {
         this.basketId = basketId;
     }
 
-    public long getProructId() {
-        return proructId;
+    public long getProductId() {
+        return productId;
     }
 
-    public void setProructId(long proructId) {
-        this.proructId = proructId;
+    public void setProductId(long productId) {
+        this.productId = productId;
     }
 
     public boolean isBought() {

@@ -26,25 +26,24 @@ import java.util.Map;
 /**
  * Created by asolomakha on 1/4/2016.
  */
-public class DataBase implements DataSource
+public class DataBaseStorage implements Storage
 {
-    private static DataSource dataSource;
+    private static Storage storage;
+    private DataBaseHelper dbHelper;
 
-    public static DataSource getInstance(Context context)
+    public static Storage getInstance(Context context)
     {
-        if (dataSource == null)
+        if (storage == null)
         {
-            return new DataBase(context);
+            return new DataBaseStorage(context);
         }
         else
         {
-            return dataSource;
+            return storage;
         }
     }
 
-    private DataBaseHelper dbHelper;
-
-    private DataBase(Context context)
+    private DataBaseStorage(Context context)
     {
         dbHelper = new DataBaseHelper(context);
     }
@@ -81,27 +80,20 @@ public class DataBase implements DataSource
         try
         {
             cursor = db.query(CategoriesTable.TABLE_NAME, null, null, null, null, null, null);
-            if (cursor != null)
+            if (cursor != null && cursor.moveToFirst())
             {
-                if (cursor.moveToFirst())
+                do
                 {
-                    do
-                    {
-                        Category category = new Category();
-                        category.setId(cursor.getInt(cursor.getColumnIndex(BasketsTable.COLUMN_ID)));
-                        category.setName(cursor.getString(cursor.getColumnIndex(BasketsTable.COLUMN_NAME)));
-                        categoryList.add(category);
-                    } while (cursor.moveToNext());
-                }
+                    Category category = new Category();
+                    category.setId(cursor.getInt(cursor.getColumnIndex(BasketsTable.COLUMN_ID)));
+                    category.setName(cursor.getString(cursor.getColumnIndex(BasketsTable.COLUMN_NAME)));
+                    categoryList.add(category);
+                } while (cursor.moveToNext());
             }
         }
         finally
         {
-            if (cursor != null)
-            {
-                cursor.close();
-            }
-            dbHelper.close();
+            releaseDBConnection(cursor);
         }
         return categoryList;
     }
@@ -115,23 +107,16 @@ public class DataBase implements DataSource
         try
         {
             cursor = db.query(CategoriesTable.TABLE_NAME, null, CategoriesTable.COLUMN_ID + "=" + id, null, null, null, null);
-            if (cursor != null)
+            if (cursor != null && cursor.moveToFirst())
             {
-                if (cursor.moveToFirst())
-                {
-                    category = new Category();
-                    category.setId(cursor.getInt(cursor.getColumnIndex(BasketsTable.COLUMN_ID)));
-                    category.setName(cursor.getString(cursor.getColumnIndex(BasketsTable.COLUMN_NAME)));
-                }
+                category = new Category();
+                category.setId(cursor.getInt(cursor.getColumnIndex(BasketsTable.COLUMN_ID)));
+                category.setName(cursor.getString(cursor.getColumnIndex(BasketsTable.COLUMN_NAME)));
             }
         }
         finally
         {
-            if (cursor != null)
-            {
-                cursor.close();
-            }
-            dbHelper.close();
+            releaseDBConnection(cursor);
         }
         return category;
     }
@@ -141,7 +126,6 @@ public class DataBase implements DataSource
     {
         Unit unit = null;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-
         try
         {
             ContentValues values = new ContentValues();
@@ -169,27 +153,20 @@ public class DataBase implements DataSource
         try
         {
             cursor = db.query(UnitsTable.TABLE_NAME, null, null, null, null, null, null);
-            if (cursor != null)
+            if (cursor != null && cursor.moveToFirst())
             {
-                if (cursor.moveToFirst())
+                do
                 {
-                    do
-                    {
-                        Unit unit = new Unit();
-                        unit.setId(cursor.getInt(cursor.getColumnIndex(BasketsTable.COLUMN_ID)));
-                        unit.setName(cursor.getString(cursor.getColumnIndex(BasketsTable.COLUMN_NAME)));
-                        unitList.add(unit);
-                    } while (cursor.moveToNext());
-                }
+                    Unit unit = new Unit();
+                    unit.setId(cursor.getInt(cursor.getColumnIndex(BasketsTable.COLUMN_ID)));
+                    unit.setName(cursor.getString(cursor.getColumnIndex(BasketsTable.COLUMN_NAME)));
+                    unitList.add(unit);
+                } while (cursor.moveToNext());
             }
         }
         finally
         {
-            if (cursor != null)
-            {
-                cursor.close();
-            }
-            dbHelper.close();
+            releaseDBConnection(cursor);
         }
         return unitList;
     }
@@ -202,23 +179,16 @@ public class DataBase implements DataSource
         try
         {
             cursor = db.query(UnitsTable.TABLE_NAME, null, UnitsTable.COLUMN_ID + " = " + id, null, null, null, null);
-            if (cursor != null)
+            if (cursor != null && cursor.moveToFirst())
             {
-                if (cursor.moveToFirst())
-                {
-                    unit = new Unit();
-                    unit.setId(cursor.getInt(cursor.getColumnIndex(BasketsTable.COLUMN_ID)));
-                    unit.setName(cursor.getString(cursor.getColumnIndex(BasketsTable.COLUMN_NAME)));
-                }
+                unit = new Unit();
+                unit.setId(cursor.getInt(cursor.getColumnIndex(BasketsTable.COLUMN_ID)));
+                unit.setName(cursor.getString(cursor.getColumnIndex(BasketsTable.COLUMN_NAME)));
             }
         }
         finally
         {
-            if (cursor != null)
-            {
-                cursor.close();
-            }
-            dbHelper.close();
+            releaseDBConnection(cursor);
         }
         return unit;
     }
@@ -261,7 +231,6 @@ public class DataBase implements DataSource
         {
             ContentValues listValues = new ContentValues();
             listValues.put(BasketsTable.COLUMN_NAME, name);
-
             long id = db.insert(BasketsTable.TABLE_NAME, null, listValues);
             if (id > -1)
             {
@@ -284,27 +253,21 @@ public class DataBase implements DataSource
         try
         {
             cursor = db.query(BasketsTable.TABLE_NAME, null, null, null, null, null, null);
-            if (cursor != null)
+            if (cursor != null && cursor.moveToFirst())
             {
-                if (cursor.moveToFirst())
+                do
                 {
-                    do
-                    {
-                        Basket pl = new Basket();
-                        pl.setId(cursor.getInt(cursor.getColumnIndex(BasketsTable.COLUMN_ID)));
-                        pl.setName(cursor.getString(cursor.getColumnIndex(BasketsTable.COLUMN_NAME)));
-                        basketList.add(pl);
-                    } while (cursor.moveToNext());
-                }
+                    Basket pl = new Basket();
+                    pl.setId(cursor.getInt(cursor.getColumnIndex(BasketsTable.COLUMN_ID)));
+                    pl.setName(cursor.getString(cursor.getColumnIndex(BasketsTable.COLUMN_NAME)));
+                    basketList.add(pl);
+                } while (cursor.moveToNext());
+
             }
         }
         finally
         {
-            if (cursor != null)
-            {
-                cursor.close();
-            }
-            dbHelper.close();
+            releaseDBConnection(cursor);
         }
         return basketList;
     }
@@ -353,7 +316,6 @@ public class DataBase implements DataSource
             ContentValues listValues = new ContentValues();
             listValues.put(BasketsProductsTable.COLUMN_BASKET_ID, basketId);
             listValues.put(BasketsProductsTable.COLUMN_PRODUCT_ID, productId);
-
             createdId = db.insert(BasketsProductsTable.TABLE_NAME, null, listValues);
         }
         finally
@@ -372,23 +334,19 @@ public class DataBase implements DataSource
         try
         {
             cursor = db.query(BasketsProductsTable.TABLE_NAME, null, BasketsProductsTable.COLUMN_BASKET_ID + " = " + basketId, null, null, null, null);
-            if (cursor != null)
+            if (cursor != null && cursor.moveToFirst())
             {
-                if (cursor.moveToFirst())
+                do
                 {
-                    do
-                    {
-                        BasketProduct basketProduct = new BasketProduct();
-                        basketProduct.setBought(cursor.getInt(cursor.getColumnIndex(BasketsProductsTable.COLUMN_BOUGHT)) > 0 ? true : false);
-                        basketProductMap.put(cursor.getLong(cursor.getColumnIndex(BasketsProductsTable.COLUMN_PRODUCT_ID)), basketProduct);
-
-                    } while (cursor.moveToNext());
-                }
+                    BasketProduct basketProduct = new BasketProduct();
+                    basketProduct.setBought(cursor.getInt(cursor.getColumnIndex(BasketsProductsTable.COLUMN_BOUGHT)) > 0);
+                    basketProductMap.put(cursor.getLong(cursor.getColumnIndex(BasketsProductsTable.COLUMN_PRODUCT_ID)), basketProduct);
+                } while (cursor.moveToNext());
             }
             if (!basketProductMap.isEmpty())
             {
                 cursor = db.query(ProductsTable.TABLE_NAME, null, ProductsTable.COLUMN_ID + String.format(" IN (" + TextUtils.join(", ", basketProductMap.keySet()) + ")"), null, null, null, null);
-                if (cursor.moveToFirst())
+                if (cursor != null && cursor.moveToFirst())
                 {
                     do
                     {
@@ -396,7 +354,7 @@ public class DataBase implements DataSource
                         product.setId(cursor.getLong(cursor.getColumnIndex(ProductsTable.COLUMN_ID)));
                         product.setName(cursor.getString(cursor.getColumnIndex(ProductsTable.COLUMN_NAME)));
                         int priority = cursor.getInt(cursor.getColumnIndex(ProductsTable.COLUMN_PRIORITY));
-                        product.setPriority(priority > 0 ? true : false);
+                        product.setPriority(priority > 0);
                         product.setQuantity(cursor.getInt(cursor.getColumnIndex(ProductsTable.COLUMN_QUANTITY)));
                         product.setImage(cursor.getString(cursor.getColumnIndex(ProductsTable.COLUMN_IMAGE)));
                         product.setCategory(getCategoryById(cursor.getInt(cursor.getColumnIndex(ProductsTable.COLUMN_CATEGORY_ID))));
@@ -409,40 +367,41 @@ public class DataBase implements DataSource
         }
         catch (Exception e)
         {
-            System.out.println(e);
+            System.err.println(e.getMessage());
         }
         finally
         {
-            if (cursor != null)
-            {
-                cursor.close();
-            }
-            dbHelper.close();
+            releaseDBConnection(cursor);
         }
         return productList;
     }
 
     @Override
-    public void markProductAsBought(long basketId, long productId, boolean bought)
+    public long markProductAsBought(long basketId, long productId, boolean bought)
     {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         long updatedRowsNumber = -1;
         try
         {
             ContentValues listValues = new ContentValues();
-            listValues.put(BasketsProductsTable.COLUMN_BOUGHT, bought == true ? 1 : 0);
-
+            listValues.put(BasketsProductsTable.COLUMN_BOUGHT, bought ? 1 : 0);
             String query = BasketsProductsTable.COLUMN_BASKET_ID + " = " + basketId + " AND " + BasketsProductsTable.COLUMN_PRODUCT_ID + " = " + productId;
-
             updatedRowsNumber = db.update(BasketsProductsTable.TABLE_NAME, listValues, query, null);
-
-            System.out.println();
         }
         finally
         {
             dbHelper.close();
         }
+        return updatedRowsNumber;
     }
 
+    private void releaseDBConnection(Cursor cursor)
+    {
+        if (cursor != null)
+        {
+            cursor.close();
+        }
+        dbHelper.close();
+    }
 
 }

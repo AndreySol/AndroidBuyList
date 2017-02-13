@@ -39,11 +39,11 @@ public class CategoryTest
     @Test
     public void testGetCategories()
     {
-        Category category1 = DataBase.getInstance(context).createCategory("My first category");
-        Category category2 = DataBase.getInstance(context).createCategory("My second category");
-        Category category3 = DataBase.getInstance(context).createCategory("My third category");
+        Category category1 = DataBaseStorage.getInstance(context).createCategory("My first category");
+        Category category2 = DataBaseStorage.getInstance(context).createCategory("My second category");
+        Category category3 = DataBaseStorage.getInstance(context).createCategory("My third category");
 
-        List<Category> categories = DataBase.getInstance(context).getCategories();
+        List<Category> categories = DataBaseStorage.getInstance(context).getCategories();
 
         assertEquals(categories.size(), 3);
 

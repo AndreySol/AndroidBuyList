@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by asolomakha on 1/4/2016.
  */
-public interface DataSource
+public interface Storage
 {
     Category createCategory(String categoryName);
     List<Category> getCategories();
@@ -33,5 +33,5 @@ public interface DataSource
 
     long assignProductToBasket(long basketId, long productId);
 
-    void markProductAsBought(long basketId, long productId, boolean bought);
+    long markProductAsBought(long basketId, long productId, boolean bought);
 }
