@@ -1,5 +1,7 @@
 package com.buylist.solomakha.buylistapp.storage.database.entities;
 
+import android.text.TextUtils;
+
 /**
  * Created by asolomakha on 1/3/2016.
  */
@@ -27,12 +29,16 @@ public class Basket extends BaseEntity
         boolean result = false;
         if (this == basketObj)
         {
-            result = true;
+            return true;
         }
         else if (basketObj instanceof Basket)
         {
             Basket basket = (Basket) basketObj;
-            if (getId() == basket.getId() && getName().equals(basket.getName()))
+            if (!TextUtils.equals(getName(), basket.getName()))
+            {
+                return false;
+            }
+            if (getId() == basket.getId())
             {
                 result = true;
             }

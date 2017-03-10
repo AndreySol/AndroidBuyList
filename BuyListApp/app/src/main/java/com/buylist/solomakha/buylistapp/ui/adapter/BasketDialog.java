@@ -11,11 +11,11 @@ import com.buylist.solomakha.buylistapp.R;
 /**
  * Created by mariy on 1/27/2016.
  */
-public class Basket_Dialog extends DialogFragment {
+public class BasketDialog extends DialogFragment {
 
     DialogInterface.OnClickListener listner;
 
-    public void set_listener(DialogInterface.OnClickListener l) {
+    public void setListener(DialogInterface.OnClickListener l) {
         listner = l;
 
     }

@@ -2,6 +2,8 @@ package com.buylist.solomakha.buylistapp.storage.database.entities;
 
 import android.text.TextUtils;
 
+import static com.buylist.solomakha.buylistapp.storage.database.EntityUtils.compareBaseEntities;
+
 /**
  * Created by asolomakha on 1/3/2016.
  */
@@ -23,12 +25,18 @@ public class Product extends BaseEntity
     {
         setId(id);
         setName(name);
-        this.priority = priority;
-        this.quantity = quantity;
-        this.image = image;
-        this.unit = unit;
-        this.category = category;
-        this.bought = bought;
+        setPriority(priority);
+        setQuantity(quantity);
+        setImage(image);
+        setUnit(unit);
+        setCategory(category);
+        setBought(bought);
+    }
+
+    public Product(String name)
+    {
+        setId(-1);
+        setName(name);
     }
 
     public boolean isPriority()
@@ -102,26 +110,23 @@ public class Product extends BaseEntity
         else if (productObj instanceof Product)
         {
             Product product = (Product) productObj;
+            if (!TextUtils.equals(getImage(), product.getImage())
+                    || !TextUtils.equals(getName(), product.getName()))
+            {
+                return false;
+            }
+            if (!compareBaseEntities(getCategory(), product.getCategory()))
+            {
+                return false;
+            }
+            if (!compareBaseEntities(getUnit(), product.getUnit()))
+            {
+                return false;
+            }
             if (getId() == product.getId()
                     && getQuantity() == product.getQuantity()
                     && isPriority() == product.isPriority()
-                    && isBought() == product.isBought()
-                    && getName().equals(product.getName())
-                    && getCategory().equals(product.getCategory())
-                    && getUnit().equals(product.getUnit()))
-            {
-                result = true;
-            }
-            else
-            {
-                return false;
-            }
-
-            if (!TextUtils.equals(getImage(), product.getImage()))
-            {
-                return false;
-            }
-            else
+                    && isBought() == product.isBought())
             {
                 result = true;
             }

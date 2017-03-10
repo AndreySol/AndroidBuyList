@@ -1,5 +1,7 @@
 package com.buylist.solomakha.buylistapp.storage.database.entities;
 
+import android.text.TextUtils;
+
 /**
  * Created by asolomakha on 1/3/2016.
  */
@@ -22,12 +24,16 @@ public class Category extends BaseEntity {
         boolean result = false;
         if (this == categoryObj)
         {
-            result = true;
+            return true;
         }
         else if (categoryObj instanceof Category)
         {
             Category category = (Category) categoryObj;
-            if (getId() == category.getId() && getName().equals(category.getName()))
+            if (!TextUtils.equals(getName(), category.getName()))
+            {
+                return false;
+            }
+            if (getId() == category.getId())
             {
                 result = true;
             }

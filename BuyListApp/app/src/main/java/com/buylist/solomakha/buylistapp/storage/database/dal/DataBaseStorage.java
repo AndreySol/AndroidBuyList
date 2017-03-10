@@ -35,12 +35,9 @@ public class DataBaseStorage implements Storage
     {
         if (storage == null)
         {
-            return new DataBaseStorage(context);
+            storage = new DataBaseStorage(context);
         }
-        else
-        {
-            return storage;
-        }
+        return storage;
     }
 
     private DataBaseStorage(Context context)
@@ -203,8 +200,9 @@ public class DataBaseStorage implements Storage
             productValues.put(ProductsTable.COLUMN_NAME, product.getName());
             productValues.put(ProductsTable.COLUMN_PRIORITY, product.isPriority());
             productValues.put(ProductsTable.COLUMN_QUANTITY, product.getQuantity());
-            productValues.put(ProductsTable.COLUMN_UNIT_ID, product.getUnit().getId());
-            productValues.put(ProductsTable.COLUMN_CATEGORY_ID, product.getCategory().getId());
+            productValues.put(ProductsTable.COLUMN_IMAGE, product.getImage());
+            productValues.put(ProductsTable.COLUMN_UNIT_ID, product.getUnit() == null ? null : product.getUnit().getId());
+            productValues.put(ProductsTable.COLUMN_CATEGORY_ID, product.getCategory() == null ? null : product.getCategory().getId());
             long id = db.insert(ProductsTable.TABLE_NAME, null, productValues);
             if (id > -1)
             {
@@ -324,6 +322,40 @@ public class DataBaseStorage implements Storage
         }
         return createdId;
     }
+
+    public List<Product> getProducts()
+    {
+        List<Product> productList = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+        try
+        {
+            cursor = db.query(ProductsTable.TABLE_NAME, null, null, null, null, null, null);
+            if (cursor != null && cursor.moveToFirst())
+            {
+                do
+                {
+                    Product product = new Product();
+                    product.setId(cursor.getLong(cursor.getColumnIndex(ProductsTable.COLUMN_ID)));
+                    product.setName(cursor.getString(cursor.getColumnIndex(ProductsTable.COLUMN_NAME)));
+                    int priority = cursor.getInt(cursor.getColumnIndex(ProductsTable.COLUMN_PRIORITY));
+                    product.setPriority(priority > 0);
+                    product.setQuantity(cursor.getInt(cursor.getColumnIndex(ProductsTable.COLUMN_QUANTITY)));
+                    product.setImage(cursor.getString(cursor.getColumnIndex(ProductsTable.COLUMN_IMAGE)));
+                    product.setCategory(getCategoryById(cursor.getInt(cursor.getColumnIndex(ProductsTable.COLUMN_CATEGORY_ID))));
+                    product.setUnit(getUnitById(cursor.getInt(cursor.getColumnIndex(ProductsTable.COLUMN_UNIT_ID))));
+                    product.setBought(false);
+                    productList.add(product);
+                } while (cursor.moveToNext());
+            }
+        }
+        finally
+        {
+            releaseDBConnection(cursor);
+        }
+        return productList;
+    }
+
 
     public List<Product> getProductsFromBasket(long basketId)
     {

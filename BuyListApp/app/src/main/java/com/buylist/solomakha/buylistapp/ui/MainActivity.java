@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -14,7 +16,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 
 import com.buylist.solomakha.buylistapp.R;
 import com.buylist.solomakha.buylistapp.storage.database.dal.DataBaseStorage;
@@ -23,42 +24,26 @@ import com.buylist.solomakha.buylistapp.storage.database.entities.Basket;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Category;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Unit;
-import com.buylist.solomakha.buylistapp.ui.adapter.Basket_Dialog;
-import com.buylist.solomakha.buylistapp.ui.adapter.EntityAdapter;
+import com.buylist.solomakha.buylistapp.ui.adapter.BasketAdapter;
+import com.buylist.solomakha.buylistapp.ui.adapter.BasketDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity implements DialogInterface.OnClickListener
+public class MainActivity extends Activity implements DialogInterface.OnClickListener, OnClickListener
 {
-
     private static final String LOG_TAG = "myLogs";
-    boolean alreadyCreated = false;
-    ListView listView;
+    private boolean mAlreadyCreated = false;
 
-    Basket_Dialog basket_dialog;
-    EntityAdapter listAdapter;
+    private RecyclerView mBasketListView;
+    private BasketAdapter mBasketAdapter;
 
-    List<Basket> productsListList = new ArrayList<>();
+    private BasketDialog mBasketDialog;
+
+    private List<Basket> basketList = new ArrayList<>();
 
     private static final int MENU_CONTEXT_EDIT_ID = 0;
     private static final int MENU_CONTEXT_DELETE_ID = 1;
-
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState)
-    {
-        super.onRestoreInstanceState(savedInstanceState);
-
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState)
-    {
-        super.onSaveInstanceState(outState);
-        // outState.set
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -66,36 +51,19 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        basket_dialog = new Basket_Dialog();
+        mBasketDialog = new BasketDialog();
+        mBasketDialog.setListener(this);
+        Log.d(LOG_TAG, "setListener");
 
-        basket_dialog.set_listener(this);
-        Log.d(LOG_TAG, "set_listener");
-        //if(savedInstanceState!=null) {
-        //restoreProgress(savedInstanceState);
-        //}
-
-        listView = (ListView) findViewById(R.id.productList);
-        listView.setAdapter(listAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                Basket productsList = productsListList.get(position);
-                startActivity(new Intent(getApplicationContext(), ProductsActivity.class).putExtra("Id", productsList.getId()));
-            }
-        });
-
-
-        registerForContextMenu(listView);
-
+        //registerForContextMenu(mBasketListView);
 
         Storage storage = DataBaseStorage.getInstance(this);
-        productsListList = storage.getBaskets();
-        // listAdapter = new ArrayAdapter<Basket>(this, R.layout.list_item, R.id.listItem, productsListList);
+        basketList = storage.getBaskets();
 
-        listAdapter = new EntityAdapter((ArrayList) productsListList, this);
-        listView.setAdapter(listAdapter);
 
+        mBasketListView = (RecyclerView) findViewById(R.id.basket_recycler_list);
+        mBasketListView.setLayoutManager(new LinearLayoutManager(this));
+        mBasketListView.setAdapter(new BasketAdapter(this, basketList, this));
 
         Button b = (Button) findViewById(R.id.but_fill);
         b.setOnClickListener(new View.OnClickListener()
@@ -103,7 +71,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
             @Override
             public void onClick(View v)
             {
-                if (!alreadyCreated)
+                if (!mAlreadyCreated)
                 {
                     fillDBDefaultValues();
                 }
@@ -116,7 +84,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
             @Override
             public void onClick(View v)
             {
-                basket_dialog.show(getFragmentManager(), "");
+                mBasketDialog.show(getFragmentManager(), "");
             }
         });
     }
@@ -131,7 +99,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
-        if (v.getId() == R.id.productList)
+        if (v.getId() == R.id.basket_recycler_list)
         {
             menu.add(Menu.NONE, MENU_CONTEXT_EDIT_ID, Menu.NONE, "Edit");
             menu.add(Menu.NONE, MENU_CONTEXT_DELETE_ID, Menu.NONE, "Delete");
@@ -145,10 +113,10 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         switch (item.getItemId())
         {
             case MENU_CONTEXT_EDIT_ID:
-                showEditListDialog(productsListList.get(info.position));
+                showEditListDialog(basketList.get(info.position));
                 return true;
             case MENU_CONTEXT_DELETE_ID:
-                DataBaseStorage.getInstance(this).deleteBasket(productsListList.get(info.position).getId());
+                DataBaseStorage.getInstance(this).deleteBasket(basketList.get(info.position).getId());
                 refreshList();
                 return true;
             default:
@@ -158,9 +126,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 
     private void refreshList()
     {
-        productsListList = DataBaseStorage.getInstance(this).getBaskets();
-        listAdapter.refresh(productsListList);
-
+        /*basketList = DataBaseStorage.getInstance(this).getBaskets();
+        mBasketAdapter.notifyDataSetChanged();*/
     }
 
     private void showEditListDialog(final Basket pl)
@@ -260,7 +227,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         Product productId3 = storage.createProduct(product3);
         storage.assignProductToBasket(listPostProducts.getId(), productId3.getId());//связка  со списком
 
-        alreadyCreated = true;
+        mAlreadyCreated = true;
 
         refreshList();
     }
@@ -275,5 +242,12 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         DataBaseStorage.getInstance(this).createBasket(listName);
         refreshList();
 
+    }
+
+    @Override
+    public void onClick(View v, int position)
+    {
+        Basket productsList = basketList.get(position);
+        startActivity(new Intent(getApplicationContext(), ProductsActivity.class).putExtra("Id", productsList.getId()));
     }
 }

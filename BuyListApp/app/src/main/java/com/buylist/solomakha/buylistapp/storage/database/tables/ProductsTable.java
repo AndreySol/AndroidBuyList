@@ -16,22 +16,22 @@ public class ProductsTable
     public final static String COLUMN_PRIORITY = "Priority";
     public final static String COLUMN_QUANTITY = "Quantity";
     public final static String COLUMN_IMAGE = "Image";
-    public final static String  COLUMN_CATEGORY_ID = "CategoryId";
-    public final static String  COLUMN_TEMP = "Temp";
+    public final static String COLUMN_CATEGORY_ID = "CategoryId";
+    public final static String COLUMN_TEMP = "Temp";
 
     private final static String CREATE_TABLE = " create table " +
             TABLE_NAME + "( " +
             COLUMN_ID + " integer primary key autoincrement  , " +
-            COLUMN_UNIT_ID + " integer  not null DEFAULT 1 REFERENCES "+ UnitsTable.TABLE_NAME + " ( " + UnitsTable.COLUMN_ID + " ) " +
+            COLUMN_UNIT_ID + " integer  DEFAULT 1 REFERENCES "+ UnitsTable.TABLE_NAME + " ( " + UnitsTable.COLUMN_ID + " ) " +
             "  ON DELETE SET DEFAULT " +
             "  ON UPDATE CASCADE , " +
-            COLUMN_CATEGORY_ID + " integer  not null DEFAULT 1 REFERENCES "+ CategoriesTable.TABLE_NAME + " ( " + CategoriesTable.COLUMN_ID + " ) " +
+            COLUMN_CATEGORY_ID + " integer  DEFAULT 1 REFERENCES "+ CategoriesTable.TABLE_NAME + " ( " + CategoriesTable.COLUMN_ID + " ) " +
             "  ON DELETE SET DEFAULT " +
             "  ON UPDATE CASCADE , " +
             COLUMN_NAME + " text not null, " +
             COLUMN_PRIORITY + " integer DEFAULT 0, " +
             COLUMN_QUANTITY + " real, " +
-            COLUMN_IMAGE + " text null" +
+            COLUMN_IMAGE + " text, " +
             COLUMN_TEMP + " integer  not null DEFAULT 0 " +
             ");";
 

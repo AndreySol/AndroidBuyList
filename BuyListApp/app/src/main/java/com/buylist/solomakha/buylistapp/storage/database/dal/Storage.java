@@ -23,8 +23,9 @@ public interface Storage
     List<Unit> getUnits();
 
     Product createProduct(Product product);
+    List<Product> getProducts();
 
-    Basket createBasket(String product);
+    Basket createBasket(String basketName);
     int deleteBasket(long basketId);
     int updateBasket(Basket basket);
     List<Basket> getBaskets();
