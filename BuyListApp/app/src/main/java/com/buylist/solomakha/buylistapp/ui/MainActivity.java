@@ -42,8 +42,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 
     private List<Basket> basketList = new ArrayList<>();
 
-    private static final int MENU_CONTEXT_EDIT_ID = 0;
-    private static final int MENU_CONTEXT_DELETE_ID = 1;
+    public static final int MENU_CONTEXT_EDIT_ID = 0;
+    public static final int MENU_CONTEXT_DELETE_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -55,15 +55,15 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         mBasketDialog.setListener(this);
         Log.d(LOG_TAG, "setListener");
 
-        //registerForContextMenu(mBasketListView);
-
         Storage storage = DataBaseStorage.getInstance(this);
         basketList = storage.getBaskets();
 
-
         mBasketListView = (RecyclerView) findViewById(R.id.basket_recycler_list);
         mBasketListView.setLayoutManager(new LinearLayoutManager(this));
-        mBasketListView.setAdapter(new BasketAdapter(this, basketList, this));
+
+        mBasketAdapter = new BasketAdapter(this, basketList, this);
+
+        mBasketListView.setAdapter(mBasketAdapter);
 
         Button b = (Button) findViewById(R.id.but_fill);
         b.setOnClickListener(new View.OnClickListener()
@@ -96,7 +96,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         refreshList();
     }
 
-    @Override
+    /*@Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
         if (v.getId() == R.id.basket_recycler_list)
@@ -104,19 +104,18 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
             menu.add(Menu.NONE, MENU_CONTEXT_EDIT_ID, Menu.NONE, "Edit");
             menu.add(Menu.NONE, MENU_CONTEXT_DELETE_ID, Menu.NONE, "Delete");
         }
-    }
+    }*/
 
     @Override
     public boolean onContextItemSelected(MenuItem item)
     {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId())
         {
             case MENU_CONTEXT_EDIT_ID:
-                showEditListDialog(basketList.get(info.position));
+                showEditListDialog(basketList.get(item.getOrder()));
                 return true;
             case MENU_CONTEXT_DELETE_ID:
-                DataBaseStorage.getInstance(this).deleteBasket(basketList.get(info.position).getId());
+                DataBaseStorage.getInstance(this).deleteBasket(basketList.get(item.getOrder()).getId());
                 refreshList();
                 return true;
             default:
@@ -126,8 +125,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 
     private void refreshList()
     {
-        /*basketList = DataBaseStorage.getInstance(this).getBaskets();
-        mBasketAdapter.notifyDataSetChanged();*/
+        mBasketAdapter.refresh(DataBaseStorage.getInstance(this).getBaskets());
     }
 
     private void showEditListDialog(final Basket pl)

@@ -1,36 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="55dip"
-    android:orientation="horizontal">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="55dip"
+                xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardBackgroundColor="#cacf69"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="true">
 
-    <ImageView
-        android:id="@+id/exp_list_item_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"/>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="5dp">
-
-        <TextView
-            android:id="@+id/exp_list_item_name"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:textSize="20dip" />
-
-        <TextView
-            android:id="@+id/exp_list_item_quantity"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
-            android:textColor="#afafa4"
-            android:textSize="15dip" />
-    </LinearLayout>
+            android:layout_height="50dp">
 
-</LinearLayout>
+            <ImageView
+                android:id="@+id/exp_list_item_image"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:paddingTop="5dp"
+                android:src="@android:drawable/ic_dialog_dialer"
+                android:layout_marginStart="10dp"/>
+
+            <TextView
+                android:id="@+id/exp_list_item_name"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_toEndOf="@id/exp_list_item_image"
+                android:layout_marginStart="10dp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/exp_list_item_quantity"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_below="@id/exp_list_item_name"
+                android:layout_toEndOf="@id/exp_list_item_image"
+                android:layout_marginStart="10dp"
+                android:textColor="#afafa4"
+                android:textSize="15sp"/>
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>
