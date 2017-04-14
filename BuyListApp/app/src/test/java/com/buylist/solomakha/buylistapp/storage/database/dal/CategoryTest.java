@@ -20,7 +20,7 @@ import static junit.framework.Assert.assertNotSame;
 @RunWith(RobolectricTestRunner.class)
 public class CategoryTest
 {
-    private Context context = RuntimeEnvironment.application.getBaseContext();
+    /*private Context context = RuntimeEnvironment.application.getBaseContext();
 
     @Test
     public void testBasketEquals()
@@ -58,6 +58,6 @@ public class CategoryTest
         assertEquals(category1, categories.get(0));
         assertEquals(category2, categories.get(1));
         assertEquals(category3, categories.get(2));
-    }
+    }*/
 }
 

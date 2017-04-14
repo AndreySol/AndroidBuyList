@@ -12,8 +12,7 @@ import android.widget.TextView;
 
 import com.buylist.solomakha.buylistapp.R;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Basket;
-import com.buylist.solomakha.buylistapp.ui.MainActivity;
-import com.buylist.solomakha.buylistapp.ui.OnClickListener;
+import com.buylist.solomakha.buylistapp.ui.helper.OnClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +28,12 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     private OnClickListener mOnClickListener;
     private Activity mParent;
 
-    public BasketAdapter(Activity parent, List<Basket> list, OnClickListener onClickListener)
+    public static final int MENU_CONTEXT_EDIT_ID = 0;
+    public static final int MENU_CONTEXT_DELETE_ID = 1;
+
+    public BasketAdapter(Activity parent, OnClickListener onClickListener)
     {
-        mItems = (ArrayList<Basket>) list;
+        mItems = new ArrayList<>();
         mInflater = (LayoutInflater) parent.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mOnClickListener = onClickListener;
         mParent = parent;
@@ -72,26 +74,50 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
         {
             super(itemView);
             mTxtItem = (TextView) itemView.findViewById(R.id.listItem);
-
-
+            mTxtItem.setOnCreateContextMenuListener(this);
             mTxtItem.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    mOnClickListener.onClick(v, getAdapterPosition());
+                    mOnClickListener.OnListItemClickListener(v, getAdapterPosition());
                 }
             });
-            mParent.registerForContextMenu(mTxtItem);
-            mTxtItem.setOnCreateContextMenuListener(this);
+
+            //mTxtItem.setOnContextClickListener();
+            //mTxtItem.set(this);
         }
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
         {
-            menu.setHeaderTitle("Select The Action");
-            menu.add(Menu.NONE, MainActivity.MENU_CONTEXT_EDIT_ID, getAdapterPosition(), "Edit");
-            menu.add(Menu.NONE, MainActivity.MENU_CONTEXT_DELETE_ID, getAdapterPosition(), "Delete");
+            menu.setHeaderTitle(R.string.context_action);
+            menu.add(Menu.NONE, MENU_CONTEXT_EDIT_ID, getAdapterPosition(), R.string.edit_context_item);
+            menu.add(Menu.NONE, MENU_CONTEXT_DELETE_ID, getAdapterPosition(), R.string.delete_context_item);
         }
+
+        /*@Override
+        public boolean onContextItemSelected(MenuItem item)
+        {
+            switch (item.getItemId())
+            {
+                case MENU_CONTEXT_EDIT_ID:
+                    showEditBasketDialog(mBasketList.get(item.getOrder()));
+                    return true;
+                case MENU_CONTEXT_DELETE_ID:
+                    mPresenter.deleteBasket(mBasketList.get(item.getOrder()).getId());
+                    return true;
+                default:
+                    return super.onContextItemSelected(item);
+            }
+        }
+
+        private void showEditBasketDialog(Basket basket)
+        {
+            BasketDialogFragment basketDialog = new BasketDialogFragment();
+            basketDialog.setPresenter(mPresenter);
+            basketDialog.setBasket(basket);
+            basketDialog.show(getFragmentManager(), "");
+        }*/
     }
 }

@@ -1,4 +1,4 @@
-package com.buylist.solomakha.buylistapp.ui;
+package com.buylist.solomakha.buylistapp.ui.helper;
 
 import android.view.View;
 
@@ -8,5 +8,5 @@ import android.view.View;
 
 public interface OnClickListener
 {
-    void onClick(View v, int position);
+    void OnListItemClickListener(View v, int position);
 }

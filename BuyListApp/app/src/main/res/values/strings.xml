@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">BuyListApp</string>
+    <string name="create_basket">Create basket</string>
+    <string name="edit_basket">Edit basket</string>
+    <string name="context_action">Select the action</string>
+    <string name="edit_context_item">Edit</string>
+    <string name="delete_context_item">Delete</string>
+    <string name="create_new_basket">Create new basket</string>
+    <string name="fill_database">Fill database</string>
 </resources>

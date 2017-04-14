@@ -14,8 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.buylist.solomakha.buylistapp.MainApp;
 import com.buylist.solomakha.buylistapp.R;
-import com.buylist.solomakha.buylistapp.storage.database.dal.DataBaseStorage;
+import com.buylist.solomakha.buylistapp.storage.database.dal.Storage;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Category;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Unit;
@@ -25,7 +26,9 @@ import com.buylist.solomakha.buylistapp.ui.helper.SimpleItemTouchHelperCallback;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductsActivity extends AppCompatActivity
+import javax.inject.Inject;
+
+public class ProductListActivity extends AppCompatActivity
 {
     private RecyclerView mRecyclerView;
     private ExpandableRecyclerListAdapter mExpandableRecyclerListAdapter;
@@ -33,18 +36,23 @@ public class ProductsActivity extends AppCompatActivity
 
     private ItemTouchHelper mTouchHelper;
 
+    @Inject
+    Storage mStorage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_list);
 
+        MainApp.getComponent().inject(this);
+
         basketId = getIntent().getLongExtra("Id", -1);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.product_list_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mExpandableRecyclerListAdapter = new ExpandableRecyclerListAdapter(this);
+        mExpandableRecyclerListAdapter = new ExpandableRecyclerListAdapter();
         mRecyclerView.setAdapter(mExpandableRecyclerListAdapter);
 
         SimpleItemTouchHelperCallback helperCallback = new SimpleItemTouchHelperCallback(mExpandableRecyclerListAdapter);
@@ -84,17 +92,17 @@ public class ProductsActivity extends AppCompatActivity
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.add_product_dialog, null);
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(ProductsActivity.this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(ProductListActivity.this);
         builder.setTitle("Add product");
         builder.setView(dialogView);
 
-        List<Unit> unitList = DataBaseStorage.getInstance(this).getUnits();
+        List<Unit> unitList = mStorage.getUnits();
         ArrayAdapter<Unit> unityAdapter = new ArrayAdapter<Unit>(this, android.R.layout.simple_spinner_item, unitList);
         unityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         final Spinner quantitySpinner = (Spinner) dialogView.findViewById(R.id.product_quantity_spinner);
         quantitySpinner.setAdapter(unityAdapter);
 
-        List<Category> categoryList = DataBaseStorage.getInstance(this).getCategories();
+        List<Category> categoryList = mStorage.getCategories();
         ArrayAdapter<Category> categoryAdapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_item, categoryList);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         final Spinner categorySpinner = (Spinner) dialogView.findViewById(R.id.product_category_spinner);
@@ -116,8 +124,8 @@ public class ProductsActivity extends AppCompatActivity
                 product.setUnit(unit);
                 product.setCategory(category);
 
-                DataBaseStorage.getInstance(ProductsActivity.this).createProduct(product);
-                DataBaseStorage.getInstance(ProductsActivity.this).assignProductToBasket(basketId, product.getId());
+                mStorage.createProduct(product);
+                mStorage.assignProductToBasket(basketId, product.getId());
 
                 refreshList();
                 dialog.dismiss();
@@ -138,7 +146,7 @@ public class ProductsActivity extends AppCompatActivity
 
     private void refreshList()
     {
-        List<Product> productList = DataBaseStorage.getInstance(this).getProductsFromBasket(basketId);
+        List<Product> productList = mStorage.getProductsFromBasket(basketId);
 
         List<ExpandableRecyclerListAdapter.Item> items = new ArrayList<>();
         List<String> categories = new ArrayList<>();

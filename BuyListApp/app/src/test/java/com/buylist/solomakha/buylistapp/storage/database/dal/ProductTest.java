@@ -25,7 +25,7 @@ import static org.hamcrest.core.IsNot.not;
 @RunWith(RobolectricTestRunner.class)
 public class ProductTest
 {
-    private Context context = RuntimeEnvironment.application.getBaseContext();
+    /*private Context context = RuntimeEnvironment.application.getBaseContext();
 
     @Test
     public void testProductEquals()
@@ -94,6 +94,6 @@ public class ProductTest
                 .createProduct(new Product(-1, null, false, 0, null, null, null, false));
 
         assertThat(createdProduct1, nullValue());
-    }
+    }*/
 
 }

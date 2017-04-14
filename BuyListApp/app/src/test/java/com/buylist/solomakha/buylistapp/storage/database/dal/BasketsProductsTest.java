@@ -27,7 +27,7 @@ public class BasketsProductsTest
     @Test
     public void testBasketProductsCreateAndGet()
     {
-        Storage store = DataBaseStorage.getInstance(context);
+        Storage store = null;//DataBaseStorage.getInstance(context);
 
         Basket basket = store.createBasket("Test basket");
 

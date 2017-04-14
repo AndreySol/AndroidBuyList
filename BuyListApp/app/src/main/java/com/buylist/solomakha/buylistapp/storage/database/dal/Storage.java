@@ -27,7 +27,7 @@ public interface Storage
 
     Basket createBasket(String basketName);
     int deleteBasket(long basketId);
-    int updateBasket(Basket basket);
+    int editBasket(Basket basket);
     List<Basket> getBaskets();
 
     List<Product> getProductsFromBasket(long basketId);

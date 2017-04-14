@@ -23,26 +23,18 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 /**
  * Created by asolomakha on 1/4/2016.
  */
 public class DataBaseStorage implements Storage
 {
-    private static Storage storage;
-    private DataBaseHelper dbHelper;
+    DataBaseHelper dbHelper;
 
-    public static Storage getInstance(Context context)
+    public DataBaseStorage(DataBaseHelper dbHelper)
     {
-        if (storage == null)
-        {
-            storage = new DataBaseStorage(context);
-        }
-        return storage;
-    }
-
-    private DataBaseStorage(Context context)
-    {
-        dbHelper = new DataBaseHelper(context);
+        this.dbHelper = dbHelper;
     }
 
     @Override
@@ -271,7 +263,7 @@ public class DataBaseStorage implements Storage
     }
 
     @Override
-    public int updateBasket(Basket basket)
+    public int editBasket(Basket basket)
     {
         int updatedRowsNumber = 0;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
