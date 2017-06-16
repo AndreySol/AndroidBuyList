@@ -215,6 +215,15 @@ public class DataBaseStorage implements Storage
     @Override
     public Basket createBasket(String name)
     {
+        try
+        {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
         Basket basket = null;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         try
@@ -237,6 +246,14 @@ public class DataBaseStorage implements Storage
     @Override
     public List<Basket> getBaskets()
     {
+        try
+        {
+            Thread.sleep(10000);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
         List<Basket> basketList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = null;
@@ -265,6 +282,14 @@ public class DataBaseStorage implements Storage
     @Override
     public int editBasket(Basket basket)
     {
+        try
+        {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
         int updatedRowsNumber = 0;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         try
@@ -283,6 +308,14 @@ public class DataBaseStorage implements Storage
     @Override
     public int deleteBasket(long basketId)
     {
+        try
+        {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
         int deletedRowsNumber = 0;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         try

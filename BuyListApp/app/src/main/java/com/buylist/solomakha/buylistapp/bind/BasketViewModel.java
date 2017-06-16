@@ -11,7 +11,6 @@ import com.buylist.solomakha.buylistapp.storage.database.entities.Basket;
 public class BasketViewModel extends BaseObservable
 {
     private Basket basket;
-    private String name;
 
     public BasketViewModel(Basket basket)
     {
@@ -30,12 +29,12 @@ public class BasketViewModel extends BaseObservable
 
     public String getName()
     {
-        return name;
+        return basket.getName();
     }
 
     public void setName(String name)
     {
-        this.name = name;
+        basket.setName(name);
     }
 
     public Basket getBasket()

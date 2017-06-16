@@ -7,4 +7,5 @@
     <string name="delete_context_item">Delete</string>
     <string name="create_new_basket">Create new basket</string>
     <string name="fill_database">Fill database</string>
+    <string name="please_wait">Please Wait</string>
 </resources>

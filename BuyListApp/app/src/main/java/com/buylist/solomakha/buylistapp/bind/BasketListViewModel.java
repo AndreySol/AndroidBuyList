@@ -1,11 +1,8 @@
 package com.buylist.solomakha.buylistapp.bind;
 
-import android.app.Activity;
 import android.databinding.BaseObservable;
-import android.view.View;
 
 import com.buylist.solomakha.buylistapp.mvp.presentors.BasketListPresenter;
-import com.buylist.solomakha.buylistapp.ui.BasketDialogFragment;
 
 /**
  * Created by asolomakha on 4/6/2017.
@@ -14,22 +11,18 @@ import com.buylist.solomakha.buylistapp.ui.BasketDialogFragment;
 public class BasketListViewModel extends BaseObservable
 {
     private BasketListPresenter mPresenter;
-    private Activity mParentActivity;
 
-    public BasketListViewModel(BasketListPresenter mPresenter, Activity activity)
+    public BasketListViewModel(BasketListPresenter mPresenter)
     {
         this.mPresenter = mPresenter;
-        this.mParentActivity = activity;
     }
 
-    public void createBasket(View view)
+    public void createBasket()
     {
-        BasketDialogFragment basketDialog = new BasketDialogFragment();
-        basketDialog.setPresenter(mPresenter);
-        basketDialog.show(mParentActivity.getFragmentManager(), "");
+        mPresenter.openCreateBasketDialog();
     }
 
-    public void fillDataBase(View view)
+    public void fillDataBase()
     {
         mPresenter.fillDbWithTestValues();
     }

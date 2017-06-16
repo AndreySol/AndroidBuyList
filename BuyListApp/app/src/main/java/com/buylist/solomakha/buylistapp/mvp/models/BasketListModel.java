@@ -14,11 +14,11 @@ public interface BasketListModel
 {
     Single<List<Basket>> getBasketList();
 
-    long deleteBasket(long id);
+    Single<Integer> deleteBasket(long id);
 
-    int editBasket(Basket basket);
+    Single<Integer> editBasket(Basket basket);
 
     void createTestValues();
 
-    Basket createBasket(String basketName);
+    Single<Basket> createBasket(String basketName);
 }

@@ -11,6 +11,12 @@ public class Basket extends BaseEntity
     {
     }
 
+    public Basket(Basket basket)
+    {
+        setId(basket.getId());
+        setName(basket.getName());
+    }
+
     public Basket(long id, String name)
     {
         setId(id);

@@ -1,5 +1,6 @@
 package com.buylist.solomakha.buylistapp.mvp.presentors;
 
+import com.buylist.solomakha.buylistapp.mvp.views.BasketListView;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Basket;
 
 /**
@@ -8,13 +9,21 @@ import com.buylist.solomakha.buylistapp.storage.database.entities.Basket;
 
 public interface BasketListPresenter
 {
-    void loadBasketList();
+    void setView(BasketListView view);
 
-    void deleteBasket(long id);
+    void loadBasketList(boolean showProgress);
 
-    void editBasket(Basket pl);
+    void deleteBasket(long id, boolean showProgress);
+
+    void editBasket(Basket basket, boolean showProgress);
 
     void fillDbWithTestValues();
 
-    void createBasket(String basketName);
+    void createBasket(String basketName, boolean showProgress);
+
+    void openProductsInBasket(long basketId);
+
+    void openCreateBasketDialog();
+
+    void openEditBasketDialog(Basket basket);
 }

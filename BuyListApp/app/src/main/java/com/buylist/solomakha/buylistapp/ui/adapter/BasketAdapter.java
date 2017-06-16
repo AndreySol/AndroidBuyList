@@ -1,6 +1,5 @@
 package com.buylist.solomakha.buylistapp.ui.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -11,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.buylist.solomakha.buylistapp.R;
+import com.buylist.solomakha.buylistapp.mvp.presentors.BasketListPresenter;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Basket;
-import com.buylist.solomakha.buylistapp.ui.helper.OnClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,28 +22,24 @@ import java.util.List;
 public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder>
 {
     private ArrayList<Basket> mItems;
-    private LayoutInflater mInflater;//переводит XML в Object
-
-    private OnClickListener mOnClickListener;
-    private Activity mParent;
+    private LayoutInflater mInflater;
+    private BasketListPresenter mPresenter;
 
     public static final int MENU_CONTEXT_EDIT_ID = 0;
     public static final int MENU_CONTEXT_DELETE_ID = 1;
 
-    public BasketAdapter(Activity parent, OnClickListener onClickListener)
+    public BasketAdapter(Context context, BasketListPresenter presenter)
     {
         mItems = new ArrayList<>();
-        mInflater = (LayoutInflater) parent.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mOnClickListener = onClickListener;
-        mParent = parent;
+        mPresenter = presenter;
+        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         View v = mInflater.inflate(R.layout.list_item, null);
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     @Override
@@ -70,7 +65,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     {
         TextView mTxtItem;
 
-        public ViewHolder(View itemView)
+        ViewHolder(View itemView)
         {
             super(itemView);
             mTxtItem = (TextView) itemView.findViewById(R.id.listItem);
@@ -80,12 +75,9 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
                 @Override
                 public void onClick(View v)
                 {
-                    mOnClickListener.OnListItemClickListener(v, getAdapterPosition());
+                    mPresenter.openProductsInBasket(mItems.get(getAdapterPosition()).getId());
                 }
             });
-
-            //mTxtItem.setOnContextClickListener();
-            //mTxtItem.set(this);
         }
 
         @Override
@@ -95,29 +87,5 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
             menu.add(Menu.NONE, MENU_CONTEXT_EDIT_ID, getAdapterPosition(), R.string.edit_context_item);
             menu.add(Menu.NONE, MENU_CONTEXT_DELETE_ID, getAdapterPosition(), R.string.delete_context_item);
         }
-
-        /*@Override
-        public boolean onContextItemSelected(MenuItem item)
-        {
-            switch (item.getItemId())
-            {
-                case MENU_CONTEXT_EDIT_ID:
-                    showEditBasketDialog(mBasketList.get(item.getOrder()));
-                    return true;
-                case MENU_CONTEXT_DELETE_ID:
-                    mPresenter.deleteBasket(mBasketList.get(item.getOrder()).getId());
-                    return true;
-                default:
-                    return super.onContextItemSelected(item);
-            }
-        }
-
-        private void showEditBasketDialog(Basket basket)
-        {
-            BasketDialogFragment basketDialog = new BasketDialogFragment();
-            basketDialog.setPresenter(mPresenter);
-            basketDialog.setBasket(basket);
-            basketDialog.show(getFragmentManager(), "");
-        }*/
     }
 }

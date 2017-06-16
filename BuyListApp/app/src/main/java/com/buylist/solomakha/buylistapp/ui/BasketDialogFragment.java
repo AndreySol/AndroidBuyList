@@ -22,6 +22,11 @@ public class BasketDialogFragment extends DialogFragment implements DialogInterf
 
     private BasketDialogBinding binding;
 
+    public BasketDialogFragment()
+    {
+        mBasket = new Basket(0, "");
+    }
+
     public void setPresenter(BasketListPresenter presenter)
     {
         this.mPresenter = presenter;
@@ -29,7 +34,7 @@ public class BasketDialogFragment extends DialogFragment implements DialogInterf
 
     public void setBasket(Basket basket)
     {
-        this.mBasket = basket;
+        mBasket = basket;
         editAction = true;
     }
 
@@ -45,11 +50,11 @@ public class BasketDialogFragment extends DialogFragment implements DialogInterf
     {
         if (editAction)
         {
-            mPresenter.editBasket(binding.getBasket().getBasket());
+            mPresenter.editBasket(binding.getBasket().getBasket(), true);
         }
         else
         {
-            mPresenter.createBasket(binding.getBasket().getName());
+            mPresenter.createBasket(binding.getBasket().getName(), true);
         }
     }
 

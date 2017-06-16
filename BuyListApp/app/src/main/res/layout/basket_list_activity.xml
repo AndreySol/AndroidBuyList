@@ -30,14 +30,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/fill_database"
-                android:onClick="@{viewModel::fillDataBase}"/>
+                android:onClick="@{() -> viewModel.fillDataBase()}"/>
 
             <Button
                 android:id="@+id/create_basket_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/create_new_basket"
-                android:onClick="@{viewModel::createBasket}"/>
+                android:onClick="@{() -> viewModel.createBasket()}"/>
 
         </LinearLayout>
 

@@ -8,6 +8,7 @@ import com.buylist.solomakha.buylistapp.storage.database.entities.Product;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Unit;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
@@ -30,19 +31,40 @@ public class BasketListModelImpl implements BasketListModel
     @Override
     public Single<List<Basket>> getBasketList()
     {
-        return Single.just(storage.getBaskets());
+        return Single.fromCallable(new Callable<List<Basket>>()
+        {
+            @Override
+            public List<Basket> call() throws Exception
+            {
+                return storage.getBaskets();
+            }
+        });
     }
 
     @Override
-    public long deleteBasket(long id)
+    public Single<Integer> deleteBasket(final long id)
     {
-        return storage.deleteBasket(id);
+        return Single.fromCallable(new Callable<Integer>()
+        {
+            @Override
+            public Integer call() throws Exception
+            {
+                return storage.deleteBasket(id);
+            }
+        });
     }
 
     @Override
-    public int editBasket(Basket basket)
+    public Single<Integer> editBasket(final Basket basket)
     {
-        return storage.editBasket(basket);
+        return Single.fromCallable(new Callable<Integer>()
+        {
+            @Override
+            public Integer call() throws Exception
+            {
+                return storage.editBasket(basket);
+            }
+        });
     }
 
     @Override
@@ -107,8 +129,15 @@ public class BasketListModelImpl implements BasketListModel
     }
 
     @Override
-    public Basket createBasket(String basketName)
+    public Single<Basket> createBasket(final String basketName)
     {
-        return storage.createBasket(basketName);
+        return Single.fromCallable(new Callable<Basket>()
+        {
+            @Override
+            public Basket call() throws Exception
+            {
+                return storage.createBasket(basketName);
+            }
+        });
     }
 }

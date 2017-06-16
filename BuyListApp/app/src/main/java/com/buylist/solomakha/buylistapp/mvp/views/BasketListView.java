@@ -13,4 +13,14 @@ public interface BasketListView
     void showBasketList(List<Basket> basketList);
 
     void showError(String errorMsg);
+
+    void showMessage(String message);
+
+    void showProductsByBasket(long basketId);
+
+    void showProgress(boolean show);
+
+    void showCreateBasketDialog();
+
+    void showEditBasketDialog(Basket basket);
 }
