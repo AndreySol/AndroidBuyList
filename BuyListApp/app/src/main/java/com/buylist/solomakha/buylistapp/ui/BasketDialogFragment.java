@@ -56,6 +56,7 @@ public class BasketDialogFragment extends DialogFragment implements DialogInterf
         {
             mPresenter.createBasket(binding.getBasket().getName(), true);
         }
+        dismiss();
     }
 
     private void initBinding()

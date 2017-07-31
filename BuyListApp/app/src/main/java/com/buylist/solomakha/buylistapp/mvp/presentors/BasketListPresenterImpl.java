@@ -140,19 +140,31 @@ public class BasketListPresenterImpl implements BasketListPresenter
                         basketListView.get().showBasketList((List<Basket>)o);
                     }
                 });
-
-
-        if (showProgress)
-        {
-            basketListView.get().showProgress(false);
-        }
     }
 
     @Override
-    public void fillDbWithTestValues()
+    public void fillDbWithTestValues(final boolean showProgress)
     {
-        basketListModel.createTestValues();
-        loadBasketList(true);
+        if (showProgress)
+        {
+            basketListView.get().showProgress(true);
+        }
+        Single.concat(basketListModel.createTestValues(), basketListModel.getBasketList())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .last()
+                .subscribe(new Action1<Object>()
+                {
+                    @Override
+                    public void call(Object o)
+                    {
+                        if (showProgress)
+                        {
+                            basketListView.get().showProgress(false);
+                        }
+                        basketListView.get().showBasketList((List<Basket>)o);
+                    }
+                });
     }
 
     @Override

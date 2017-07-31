@@ -18,7 +18,7 @@ public interface BasketListModel
 
     Single<Integer> editBasket(Basket basket);
 
-    void createTestValues();
+    Single<Boolean> createTestValues();
 
     Single<Basket> createBasket(String basketName);
 }

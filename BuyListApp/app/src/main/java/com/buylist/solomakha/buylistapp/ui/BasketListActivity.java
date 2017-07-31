@@ -1,8 +1,8 @@
 package com.buylist.solomakha.buylistapp.ui;
 
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.arch.lifecycle.LifecycleActivity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -15,21 +15,19 @@ import com.buylist.solomakha.buylistapp.R;
 import com.buylist.solomakha.buylistapp.bind.BasketListViewModel;
 import com.buylist.solomakha.buylistapp.databinding.BasketListActivityBinding;
 import com.buylist.solomakha.buylistapp.mvp.presentors.BasketListPresenter;
-import com.buylist.solomakha.buylistapp.mvp.presentors.BasketListPresenterImpl;
 import com.buylist.solomakha.buylistapp.mvp.views.BasketListView;
 import com.buylist.solomakha.buylistapp.storage.database.entities.Basket;
 import com.buylist.solomakha.buylistapp.ui.adapter.BasketAdapter;
 import com.buylist.solomakha.buylistapp.ui.adapter.FragmentWorker;
+import com.buylist.solomakha.buylistapp.viewmodels.BasketLiveDataViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.buylist.solomakha.buylistapp.ui.adapter.BasketAdapter.MENU_CONTEXT_DELETE_ID;
 import static com.buylist.solomakha.buylistapp.ui.adapter.BasketAdapter.MENU_CONTEXT_EDIT_ID;
 
-public class BasketListActivity extends Activity implements BasketListView
+public class BasketListActivity extends LifecycleActivity implements BasketListView
 {
     private static final String LOG_TAG = "myLogs";
 
@@ -45,11 +43,6 @@ public class BasketListActivity extends Activity implements BasketListView
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        BasketListActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.basket_list_activity);
-        binding.setViewModel(new BasketListViewModel(mPresenter));
-        initListView(binding.basketRecyclerList);
-        initProgressDialog();
-
         FragmentWorker fragmentWorker = (FragmentWorker) getFragmentManager().findFragmentByTag("Test");
         if (fragmentWorker == null)
         {
@@ -58,6 +51,12 @@ public class BasketListActivity extends Activity implements BasketListView
         }
 
         mPresenter = fragmentWorker.getPresenter();
+
+        BasketListActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.basket_list_activity);
+        binding.setViewModel(new BasketListViewModel(mPresenter));
+        initListView(binding.basketRecyclerList);
+
+        initProgressDialog();
     }
 
     private void initListView(RecyclerView recyclerView)
@@ -78,16 +77,18 @@ public class BasketListActivity extends Activity implements BasketListView
     @Override
     protected void onResume()
     {
-        Logger.getLogger("TestSave").log(Level.INFO, "onResume");
         super.onResume();
-        if (!mInProgress)
-        {
-            mPresenter.loadBasketList(true);
-        }
-        else
+        if (mInProgress)
         {
             showProgress(true);
         }
+        else
+        {
+            mPresenter.loadBasketList(true);
+        }
+
+        BasketLiveDataViewModel viewModel = ViewModelProviders.of(this).get(BasketLiveDataViewModel.class);
+        viewModel.getList();
     }
 
     @Override
@@ -169,7 +170,6 @@ public class BasketListActivity extends Activity implements BasketListView
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
-        Logger.getLogger("TestSave").log(Level.INFO, "onSaveInstanceState");
         super.onSaveInstanceState(outState);
         outState.putBoolean("inProgress", mInProgress);
     }
@@ -177,7 +177,6 @@ public class BasketListActivity extends Activity implements BasketListView
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState)
     {
-        Logger.getLogger("TestSave").log(Level.INFO, "onRestoreInstanceState");
         super.onRestoreInstanceState(savedInstanceState);
         mInProgress = savedInstanceState.getBoolean("inProgress");
     }

@@ -17,7 +17,7 @@ public interface BasketListPresenter
 
     void editBasket(Basket basket, boolean showProgress);
 
-    void fillDbWithTestValues();
+    void fillDbWithTestValues(boolean showProgress);
 
     void createBasket(String basketName, boolean showProgress);
 

@@ -24,6 +24,6 @@ public class BasketListViewModel extends BaseObservable
 
     public void fillDataBase()
     {
-        mPresenter.fillDbWithTestValues();
+        mPresenter.fillDbWithTestValues(true);
     }
 }

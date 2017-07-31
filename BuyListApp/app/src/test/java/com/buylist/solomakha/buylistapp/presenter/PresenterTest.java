@@ -28,10 +28,11 @@ public class PresenterTest
 
     private BasketListPresenter mBasketListPresenter;
 
-    public PresenterTest(BasketListPresenter mBasketListPresenter)
+   /* public PresenterTest(BasketListPresenter mBasketListPresenter)
     {
         this.mBasketListPresenter = mBasketListPresenter;
-    }
+    }*/
+
 
     @Before
     public void setup()

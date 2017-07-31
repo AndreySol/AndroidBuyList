@@ -8,6 +8,10 @@ import android.text.TextUtils;
 public class Category extends BaseEntity {
     public Category(){}
 
+    public Category(String name) {
+        setName(name);
+    }
+
     public Category(long id, String name) {
         setId(id);
         setName(name);

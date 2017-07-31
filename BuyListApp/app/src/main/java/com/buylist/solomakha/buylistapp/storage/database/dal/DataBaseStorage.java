@@ -246,14 +246,6 @@ public class DataBaseStorage implements Storage
     @Override
     public List<Basket> getBaskets()
     {
-        try
-        {
-            Thread.sleep(10000);
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
         List<Basket> basketList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = null;
